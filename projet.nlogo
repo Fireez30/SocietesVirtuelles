@@ -25,6 +25,9 @@ to make-obstacles
   display
 end
 
+to spawn-walls
+  ask patches [ if random-float 1.0 < 0.04 [ set pcolor red ] ]
+end
 
 ;;simulation treatment
 
@@ -80,6 +83,25 @@ end
 
 to clear
   clear-all
+end
+
+;;vector functions
+to-report angleFromVect [vect]
+  let a atan item 0 vect item 1 vect
+  report a
+end
+
+to-report vectFromAngle [angle len]
+  let l (list (len * sin angle) (len * cos angle))
+  report l
+end
+
+to-report multiplyScalarvect [factor vect]
+  report (list (item 0 vect * factor) (item 1 vect * factor))
+end
+
+to-report additionvect [v1 v2]
+  report (list (item 0 v1 + item 0 v2) (item 1 v1 + item 1 v2) )
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
