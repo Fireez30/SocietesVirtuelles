@@ -30,6 +30,10 @@ to spawn-walls
   reset-ticks
 end
 
+to import-model
+  ;;model : model.png, size : 32x32
+  import-pcolors "model.png"
+end
 ;;simulation treatment
 
 to go
@@ -47,11 +51,38 @@ end
 
 to flock
   avoid-obstacles
+  let a angleFromVect vectDirect
+  turn-towards a max-angle-turn
+end
+
+to-report vectDirect
+  ;;let va multiplyScalarvect attract-weight vectAttract
+  ;;let vs multiplyScalarvect repuls-weight vectRepuls
+
+  ;;let vr additionvect va vs
+
+  report 0
+end
+
+to-report vectRepuls
+  let vs 0
+  set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)
+  report vs
+end
+
+to-report vectAttract
+  let vs 0
+  set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)
+  report vs
 end
 
 to check-coll
-  if ([pcolor] of patch-at xcor ycor != black)[
+  if (pcolor != black)[
     die]
+end
+
+to turn-towards [new-heading max-turn]  ;; turtle procedure
+  turn-at-most (subtract-headings new-heading heading) max-turn
 end
 
 to avoid-obstacles
@@ -141,7 +172,7 @@ percept-cone-degree
 percept-cone-degree
 0
 100
-50.0
+0.0
 1
 1
 NIL
@@ -176,7 +207,7 @@ attract-weight
 attract-weight
 0
 1
-0.5
+0.0
 0.05
 1
 NIL
@@ -191,7 +222,7 @@ repuls-weight
 repuls-weight
 0
 1
-0.5
+0.0
 0.05
 1
 NIL
@@ -284,7 +315,7 @@ agent-number
 agent-number
 0
 100
-50.0
+9.0
 1
 1
 NIL
@@ -316,7 +347,7 @@ angle-avoidance
 angle-avoidance
 0
 360
-90.0
+0.0
 1
 1
 NIL
@@ -331,7 +362,7 @@ min-dist
 min-dist
 0
 20
-3.0
+0.0
 0.5
 1
 NIL
@@ -346,7 +377,7 @@ max-avoidance-turn
 max-avoidance-turn
 0
 50
-10.0
+0.0
 1
 1
 NIL
@@ -388,6 +419,38 @@ TEXTBOX
 Display
 14
 0.0
+1
+
+SLIDER
+586
+179
+758
+212
+max-angle-turn
+max-angle-turn
+0
+360
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+360
+624
+488
+657
+Setup from Model
+import-model
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
 1
 
 @#$#@#$#@
