@@ -21,12 +21,13 @@ to make-obstacles
   if mouse-down?
   [ ask patches
     [ if ((abs (pxcor - mouse-xcor)) < 1) and ((abs (pycor - mouse-ycor)) < 1)
-      [ set pcolor red ]]]
+      [ set pcolor brown ]]]
   display
 end
 
 to spawn-walls
-  ask patches [ if random-float 1.0 < 0.04 [ set pcolor red ] ]
+  ask patches [ if random-float 1.0 < 0.04 [ set pcolor brown ] ]
+  reset-ticks
 end
 
 ;;simulation treatment
