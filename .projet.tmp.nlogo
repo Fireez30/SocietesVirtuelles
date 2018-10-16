@@ -40,7 +40,7 @@ end
 
 
 to go
-  ask turtles [check-coll flock count-collisions]
+  ask turtles [check-coll flock  count-collisions]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
   ;repeat 5 [ ask turtles [ fd 0.2 ] display ]
@@ -170,12 +170,9 @@ end
 ;end
 
 to check-coll
-  ifelse (pcolor != black)[
+  if (pcolor != black)[
     ;die
     bk 1
-  ]
-  [
-    fd 1
   ]
 end
 
