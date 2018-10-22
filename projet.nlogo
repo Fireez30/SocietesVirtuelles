@@ -6,7 +6,17 @@ turtles-own [
   nearest-neighbor   ;; closest one of our flockmates
 ]
 
+patches-own [
+ material
+ onfire
+]
 ;;setup simulation
+
+to start-fire
+  ask patches [set onfire false]
+  ask one-of patches [set onfire true]
+  reset-ticks
+end
 
 to agent-spawn
   set collisions 0
@@ -33,13 +43,25 @@ end
 to import-model
   ;;model : model.png, size : 32x32
   import-pcolors "model.png"
+  ask patches [set onfire false]
 end
 ;;simulation treatment
 
+to spread-fire
+ ask neighbors [
+    if pcolor = black[
+    let r random 100
+      if r <= fire-proba [set onfire true]]]
+end
 
+to update-color
+  if pcolor != red
+  [set pcolor red]
+end
 
 
 to go
+  ask patches with [onfire = true] [update-color spread-fire]
   ask turtles [check-coll flock count-collisions]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
@@ -80,7 +102,7 @@ to flock  ;; turtle procedure
 end
 
 to find-obstacles
-  set obstacles patches in-cone 9 60 with [pcolor = brown]
+  set obstacles patches in-cone 9 60 with [pcolor = brown or pcolor = red]
 end
 
 to find-flockmates  ;; turtle procedure
@@ -621,6 +643,21 @@ factor-obstacles
 NIL
 HORIZONTAL
 
+SLIDER
+22
+702
+194
+735
+fire-proba
+fire-proba
+0
+100
+22.0
+1
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
 ## WHAT IS IT?
 
@@ -963,7 +1000,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.2
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
