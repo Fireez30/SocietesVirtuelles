@@ -99,7 +99,7 @@ to damage
 end
 
 to clear-body
-  if dead = true and pcolor = red
+  if dead = true and (pcolor = red or pcolor = brown)
   [ die ]
 end
 
@@ -122,7 +122,7 @@ to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
   ask turtles with [dead = false] [check-coll damage flock count-collisions]
-  ask turtles [check-death damage clear-body ]
+  ask turtles [check-death damage clear-body escape]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
   ;repeat 5 [ ask turtles [ fd 0.2 ] display ]
@@ -148,7 +148,7 @@ to flock  ;; turtle procedure
 
   ifelse any? obj
   [
-    let v vectWithObj
+    let v vectObjObstacle
     let a angleFromVect v
     let s magnitude v
     turn-towards a max-angle-turn
@@ -166,8 +166,8 @@ to flock  ;; turtle procedure
         let a angleFromVect v
         let s magnitude v
         turn-towards a max-angle-turn
+        let f 0
       ]
-      let f 0
     ]
   ]
 end
@@ -204,6 +204,14 @@ end
 
   ;report 0
 ;end
+
+to-report vectObjObstacle
+  let vobj multiplyScalarvect  vectObj
+  let vobs multiplyScalarvect factor-obstacles vectObstacles
+
+  let vr additionvect vobj vobs
+  report vr
+end
 
 to-report vectDirect
   let va multiplyScalarvect factor-align vectAlign
@@ -285,7 +293,7 @@ end
 ;end
 
 to check-coll
-  ifelse (pcolor != black)[
+  ifelse (pcolor = red or pcolor = brown)[
     ;die
     bk 1
   ]
@@ -746,7 +754,7 @@ fire-proba
 fire-proba
 0
 100
-8.0
+2.0
 1
 1
 NIL
@@ -761,7 +769,7 @@ smoke-proba
 smoke-proba
 0
 100
-22.0
+6.0
 1
 1
 NIL
@@ -815,10 +823,10 @@ NIL
 1
 
 MONITOR
-632
-279
-691
-324
+1482
+103
+1541
+148
 NIL
 escaped
 17

@@ -99,7 +99,7 @@ to damage
 end
 
 to clear-body
-  if dead = true and pcolor = red
+  if dead = true and (pcolor = red or pcolor = brown)
   [ die ]
 end
 
@@ -148,7 +148,7 @@ to flock  ;; turtle procedure
 
   ifelse any? obj
   [
-    let v vectWithObj
+    let v vectObjObstacle
     let a angleFromVect v
     let s magnitude v
     turn-towards a max-angle-turn
@@ -166,8 +166,8 @@ to flock  ;; turtle procedure
         let a angleFromVect v
         let s magnitude v
         turn-towards a max-angle-turn
+        let f 0
       ]
-      let f 0
     ]
   ]
 end
@@ -204,6 +204,14 @@ end
 
   ;report 0
 ;end
+
+to-report vectObjObstacle
+  let vobj multiplyScalarvect 0.8 vectObj
+  let vobs multiplyScalarvect factor-obstacles vectObstacles
+
+  let vr additionvect vobj vobs
+  report vr
+end
 
 to-report vectDirect
   let va multiplyScalarvect factor-align vectAlign
@@ -285,7 +293,7 @@ end
 ;end
 
 to check-coll
-  ifelse (pcolor != black)[
+  ifelse (pcolor = red or pcolor = brown)[
     ;die
     bk 1
   ]
@@ -746,7 +754,7 @@ fire-proba
 fire-proba
 0
 100
-8.0
+2.0
 1
 1
 NIL
@@ -761,7 +769,7 @@ smoke-proba
 smoke-proba
 0
 100
-22.0
+6.0
 1
 1
 NIL
