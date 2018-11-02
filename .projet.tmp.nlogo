@@ -122,7 +122,7 @@ to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
   ask turtles with [dead = false] [check-coll damage flock count-collisions]
-  ask turtles [check-death damage clear-body escape]
+  ask turtles [check-death damage clear-body ]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
   ;repeat 5 [ ask turtles [ fd 0.2 ] display ]
@@ -815,10 +815,10 @@ NIL
 1
 
 MONITOR
-1482
-103
-1541
-148
+632
+279
+691
+324
 NIL
 escaped
 17
