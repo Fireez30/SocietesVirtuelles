@@ -7,6 +7,7 @@ turtles-own [
   dead
   hp
   obj
+  panic
 ]
 
 patches-own [
@@ -32,7 +33,9 @@ to agent-spawn
       set size 1 ;; easier to see]
       setxy random-xcor random-ycor
       set dead false
-      set hp 100]
+      set hp 100
+      set panic 0]
+  ask turtles [if pcolor = brown [die]]
   reset-ticks
 end
 
@@ -62,6 +65,9 @@ to import-model
   ;;model : model.png, size : 32x32
   import-pcolors "model.png"
   ask patches [set onfire false]
+  ask patches [if pcolor != black
+    [set pcolor brown]]
+  reset-ticks
 end
 ;;simulation treatment
 
@@ -121,11 +127,12 @@ end
 to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
-  ask turtles with [dead = false] [check-coll damage flock count-collisions]
+  ask turtles with [dead = false] [check-coll damage count-collisions]
+  ask turtles with [panic = 1] [flock]
   ask turtles [check-death damage clear-body escape]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
-  ;repeat 5 [ ask turtles [ fd 0.2 ] display ]
+  ;;repeat 5 [ ask turtles [ fd 0.2 ] display ]
   ;; for greater efficiency, at the expense of smooth
   ;; animation, substitute the following line instead:
   ;; ask turtles [ fd 1 ]
@@ -176,9 +183,15 @@ to find-exit
  set obj patches in-cone fov-radius fov-angle with [pcolor = yellow]
 end
 
+to update-panic
+  let others turtles in-cone 9 60 with [panic = 1]
+  if any? others [set panic 1]
+  let obs patches in-cone 9 60 with [pcolor = red]
+  if any? obs [set panic 1]
+end
 
 to find-obstacles
-  set obstacles patches in-cone 9 60 with [pcolor = brown or pcolor = red]
+  set obstacles patches in-cone 9 60 with [pcolor = brown or pcolor = red or pcolor = grey]
 end
 
 to find-flockmates  ;; turtle procedure
@@ -206,7 +219,7 @@ end
 ;end
 
 to-report vectObjObstacle
-  let vobj multiplyScalarvect 0.8 vectObj
+  let vobj multiplyScalarvect 0.5 vectObj
   let vobs multiplyScalarvect factor-obstacles vectObstacles
 
   let vr additionvect vobj vobs
@@ -709,7 +722,7 @@ factor-separate
 factor-separate
 0
 1
-0.2
+0.1
 0.1
 1
 NIL
@@ -724,7 +737,7 @@ factor-cohere
 factor-cohere
 0
 1
-0.2
+0.1
 0.1
 1
 NIL
@@ -739,7 +752,7 @@ factor-obstacles
 factor-obstacles
 0
 1
-1.0
+0.6
 0.1
 1
 NIL
@@ -1205,7 +1218,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.2
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
