@@ -127,8 +127,8 @@ end
 to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
-  ask turtles with [dead = false] [check-coll damage count-collisions]
-  ask turtles with [panic = 1] [flock]
+  ask turtles with [dead = false] [update-panic damage count-collisions]
+  ask turtles with [panic = 1] [flock check-coll]
   ask turtles [check-death damage clear-body escape]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
@@ -186,8 +186,8 @@ end
 to update-panic
   let others turtles in-cone 9 60 with [panic = 1]
   if any? others [set panic 1]
-  let obs patches in-cone 9 60 with [pcolor = red]
-  if any? obs [set panic 1]
+  let fire patches in-cone 9 60 with [pcolor = red or pcolor = grey]
+  if any? fire [set panic 1]
 end
 
 to find-obstacles
@@ -219,7 +219,7 @@ end
 ;end
 
 to-report vectObjObstacle
-  let vobj multiplyScalarvect 0.5 vectObj
+  let vobj multiplyScalarvect 0.2 vectObj
   let vobs multiplyScalarvect factor-obstacles vectObstacles
 
   let vr additionvect vobj vobs
@@ -307,8 +307,7 @@ end
 
 to check-coll
   ifelse (pcolor = red or pcolor = brown)[
-    ;die
-    bk 1
+    die
   ]
   [
     fd 1
@@ -752,7 +751,7 @@ factor-obstacles
 factor-obstacles
 0
 1
-0.6
+1.0
 0.1
 1
 NIL
