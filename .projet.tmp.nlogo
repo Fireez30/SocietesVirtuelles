@@ -219,7 +219,7 @@ end
 ;end
 
 to-report vectObjObstacle
-  let vobj multiplyScalarvect factor-obj vectObj
+  let vobj multiplyScalarvect 0. vectObj
   let vobs multiplyScalarvect factor-obstacles vectObstacles
 
   let vr additionvect vobj vobs
