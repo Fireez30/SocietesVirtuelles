@@ -128,7 +128,7 @@ to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
   ask turtles with [dead = false] [update-panic damage count-collisions]
-  ask turtles with [panic = 1] [flock check-coll]
+  ask turtles with [panic = 1 and dead = false] [flock check-coll]
   ask turtles [check-death damage clear-body escape]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
@@ -191,7 +191,7 @@ to update-panic
 end
 
 to find-obstacles
-  set obstacles patches in-cone 9 60 with [pcolor = brown or pcolor = red or pcolor = grey]
+  set obstacles patches in-cone fov-radius fov-angle with [pcolor = brown or pcolor = red or pcolor = grey]
 end
 
 to find-flockmates  ;; turtle procedure
@@ -307,7 +307,9 @@ end
 
 to check-coll
   ifelse (pcolor = red or pcolor = brown)[
-    die
+    bk 1
+    rt random 20
+    lt random 20
   ]
   [
     fd 1
@@ -736,7 +738,7 @@ factor-cohere
 factor-cohere
 0
 1
-0.1
+0.8
 0.1
 1
 NIL
@@ -854,7 +856,7 @@ fov-angle
 fov-angle
 0
 360
-60.0
+120.0
 1
 1
 NIL
@@ -869,7 +871,7 @@ fov-radius
 fov-radius
 0
 10
-9.0
+3.0
 1
 1
 patches
@@ -1232,7 +1234,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.2
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
