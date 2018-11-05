@@ -875,6 +875,21 @@ fov-radius
 patches
 HORIZONTAL
 
+SLIDER
+1039
+431
+1211
+464
+factor-obj
+factor-obj
+0
+1
+1.0
+0.1
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
 ## WHAT IS IT?
 
