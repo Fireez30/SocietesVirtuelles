@@ -148,7 +148,7 @@ end
 ;end
 
 
-to flock  ;; turtle procedure
+to floc  ;; turtle procedure
   find-flockmates
   find-obstacles
   find-exit
@@ -177,6 +177,22 @@ to flock  ;; turtle procedure
       ]
     ]
   ]
+end
+
+to flock
+  find-flockmates
+  find-obstacles
+  find-exit
+
+  let v vectObjObstacle
+  let v2 vectDirect
+  let v3 vectWithObstacles
+
+  let vr additionvect v v2
+  set vr additionvect vr v3
+
+  let a angleFromVect vr
+  turn-towards a max-angle-turn
 end
 
 to find-exit
@@ -226,16 +242,28 @@ to-report vectObjObstacle
   report vr
 end
 
+;;to-report vectDirect
+;;  let va multiplyScalarvect factor-align vectAlign
+ ;; let vs multiplyScalarvect factor-separate vectSeparate
+;;  let vc multiplyScalarvect factor-cohere vectCohere
+;;  let vo multiplyScalarvect factor-obstacles vectObstacles
+
+;;  let vr additionvect va vs
+;;  set vr additionvect vr vc
+;;  set vr additionvect vr vo
+;;  report vr
+;;end
+
 to-report vectDirect
+  ifelse any? flockmates[
   let va multiplyScalarvect factor-align vectAlign
   let vs multiplyScalarvect factor-separate vectSeparate
   let vc multiplyScalarvect factor-cohere vectCohere
-  let vo multiplyScalarvect factor-obstacles vectObstacles
 
   let vr additionvect va vs
   set vr additionvect vr vc
-  set vr additionvect vr vo
-  report vr
+  report vr]
+  [report (list 0 0)]
 end
 
 
