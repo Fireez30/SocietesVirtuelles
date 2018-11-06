@@ -8,6 +8,7 @@ turtles-own [
   hp
   obj
   panic
+  prefexit
 ]
 
 patches-own [
@@ -33,6 +34,7 @@ to agent-spawn
       set size 1 ;; easier to see]
       setxy random-xcor random-ycor
       set dead false
+      assign-exit
       set hp 100
       set panic 0]
   ask turtles [if pcolor = brown [die]]
@@ -109,6 +111,9 @@ to clear-body
   [ die ]
 end
 
+to assign-exit
+  set prefexit one-of patches with [pcolor = yellow]
+end
 
 to check-death
   if hp <= 0 [
@@ -267,7 +272,7 @@ to-report vectDirect
 end
 
 
-to-report vectObj
+to-report vectOb
   let vo (list 0 0)
   if any? obj [
     let nearest-patch min-one-of obj [distance myself]
@@ -277,6 +282,18 @@ to-report vectObj
   report vo
 end
 
+to-report vectObj
+  let vo (list 0 0)
+  if any? obj
+  [let r random 100
+  ifelse r <= objective-choice-chance
+  [let nearest-patch min-one-of obj [distance myself]
+    let d distance nearest-patch
+    set vo VectFromAngle (towards nearest-patch) (1 / d)]
+    [let d distance prefexit
+      set vo VectFromAngle (towards prefexit) (1 / d)]]
+    report vo
+end
 to-report vectWithObj
   let vo multiplyScalarvect 1 vectObj
   report vo
@@ -916,6 +933,21 @@ factor-obj
 1
 1.0
 0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+585
+222
+769
+255
+objective-choice-chance
+objective-choice-chance
+0
+100
+80.0
+1
 1
 NIL
 HORIZONTAL
