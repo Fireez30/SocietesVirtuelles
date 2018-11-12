@@ -18,6 +18,7 @@ turtles-own [
   in-nodes
   out-nodes
   current
+  path ;; final path patch list
 ]
 
 patches-own [
@@ -48,7 +49,7 @@ to agent-spawn
       set hp 100
       set panic 0]
   ask turtles [if pcolor = brown [die]
-
+    set path []
     set in-nodes []
     set out-nodes []
     set prefexit min-one-of patches with [exit = true][distance self]
@@ -458,6 +459,9 @@ to search
   search-step
   ]
   print "Success!!"
+  ask patches with [pcolor = blue] [set pcolor black]
+  ask patches with [pcolor = white] [set pcolor black]
+  ask patches with [exit = true] [set pcolor yellow]
   draw-path current
 end
 
@@ -569,7 +573,8 @@ end
 
 to draw-path [node]
   while [node != []] [
-    ask get-patch node [set pcolor green]
+    set path lput get-patch node path
+    ;;ask get-patch node [set pcolor green]
     set node get-parent node
   ]
 end
