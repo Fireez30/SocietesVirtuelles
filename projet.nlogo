@@ -466,7 +466,8 @@ to search-step
   set in-nodes merge-nodes generate in-nodes
 
   set in-nodes sort-nodes in-nodes
-
+  if in-nodes = []
+  [stop]
   let proposed first in-nodes
   if (proposed = [])[
     stop
@@ -480,7 +481,7 @@ end
 
 to-report generate
   let aset nobody
-  set aset ([neighbors] of (get-patch current)) with [pcolor = black];[obstacle = 0]  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  set aset ([neighbors] of (get-patch current)) with [pcolor = black or pcolor = yellow];[obstacle = 0]  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ifelse (any? aset) [
     ask aset  [if (pcolor = black)[set pcolor white]]
     let lst1 [self] of aset ;; transformer en listes...
