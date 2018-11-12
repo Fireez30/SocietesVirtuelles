@@ -585,7 +585,7 @@ to-report distance-to-goal [p]
 end
 
 to-report init-current
-  report (list patch-here distance-to-goal patch-here 0 [])
+  report /(list patch-here distance-to-goal patch-here 0 [])
 end
 
 ;; get the patch
