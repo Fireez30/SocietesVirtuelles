@@ -281,8 +281,8 @@ end
 ;end
 
 to-report vectObjObstacle
-  let vobj multiplyScalarvect obj vectObj
-  let vobs multiplyScalarvect factor-obstacles vectObstacles
+  let vobj multiplyScalarvect fobj vectObj
+  let vobs multiplyScalarvect fobs vectObstacles
 
   let vr additionvect vobj vobs
   report vr
@@ -302,9 +302,9 @@ end
 
 to-report vectDirect
   ifelse any? flockmates[
-  let va multiplyScalarvect factor-align vectAlign
-  let vs multiplyScalarvect factor-separate vectSeparate
-  let vc multiplyScalarvect factor-cohere vectCohere
+  let va multiplyScalarvect falign vectAlign
+  let vs multiplyScalarvect fseparate vectSeparate
+  let vc multiplyScalarvect fcohere vectCohere
 
   let vr additionvect va vs
   set vr additionvect vr vc
@@ -365,7 +365,7 @@ to-report vectObstacles
 end
 
 to-report vectWithObstacles
-  let vo multiplyScalarvect factor-obstacles vectObstacles
+  let vo multiplyScalarvect fobs vectObstacles
   report vo
 end
 
@@ -670,10 +670,10 @@ ticks
 30.0
 
 SLIDER
-586
-32
-758
-65
+1434
+512
+1606
+545
 percept-cone-degree
 percept-cone-degree
 0
@@ -845,10 +845,10 @@ NIL
 1
 
 SLIDER
-586
-68
-758
-101
+1435
+549
+1607
+582
 angle-avoidance
 angle-avoidance
 0
@@ -861,9 +861,9 @@ HORIZONTAL
 
 SLIDER
 586
-104
+35
 758
-137
+68
 min-dist
 min-dist
 0
@@ -875,10 +875,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-586
-141
-758
-174
+1436
+589
+1608
+622
 max-avoidance-turn
 max-avoidance-turn
 0
@@ -928,10 +928,10 @@ Display
 1
 
 SLIDER
-586
-179
-758
-212
+587
+74
+759
+107
 max-angle-turn
 max-angle-turn
 0
@@ -1153,10 +1153,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-585
-222
-769
-255
+586
+117
+770
+150
 objective-choice-chance
 objective-choice-chance
 0
@@ -1202,10 +1202,10 @@ NIL
 1
 
 SLIDER
-584
-264
-756
-297
+585
+159
+757
+192
 next-patch-range
 next-patch-range
 0

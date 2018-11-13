@@ -670,10 +670,10 @@ ticks
 30.0
 
 SLIDER
-586
-32
-758
-65
+1434
+512
+1606
+545
 percept-cone-degree
 percept-cone-degree
 0
@@ -845,10 +845,10 @@ NIL
 1
 
 SLIDER
-586
-68
-758
-101
+1435
+549
+1607
+582
 angle-avoidance
 angle-avoidance
 0
@@ -861,9 +861,9 @@ HORIZONTAL
 
 SLIDER
 586
-104
+35
 758
-137
+68
 min-dist
 min-dist
 0
@@ -875,10 +875,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-586
-141
-758
-174
+1436
+589
+1608
+622
 max-avoidance-turn
 max-avoidance-turn
 0
@@ -928,10 +928,10 @@ Display
 1
 
 SLIDER
-586
-179
-758
-212
+587
+74
+759
+107
 max-angle-turn
 max-angle-turn
 0
@@ -1109,9 +1109,9 @@ escaped
 
 SLIDER
 582
-328
+276
 754
-361
+309
 fov-angle
 fov-angle
 0
@@ -1124,9 +1124,9 @@ HORIZONTAL
 
 SLIDER
 582
-367
+315
 754
-400
+348
 fov-radius
 fov-radius
 0
@@ -1153,10 +1153,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-585
-222
-769
-255
+586
+117
+770
+150
 objective-choice-chance
 objective-choice-chance
 0
@@ -1202,10 +1202,10 @@ NIL
 1
 
 SLIDER
-584
-264
-756
-297
+585
+159
+757
+192
 next-patch-range
 next-patch-range
 0
@@ -1228,9 +1228,9 @@ Environment parameters
 
 TEXTBOX
 595
-309
+257
 745
-327
+275
 Vision
 14
 0.0
