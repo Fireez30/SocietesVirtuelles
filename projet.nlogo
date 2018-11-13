@@ -1236,6 +1236,16 @@ Vision
 0.0
 1
 
+TEXTBOX
+1264
+287
+1620
+406
+IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm !\nStart the fire just before to start simulation !
+14
+0.0
+1
+
 @#$#@#$#@
 ## WHAT IS IT?
 

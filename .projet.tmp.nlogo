@@ -1109,9 +1109,9 @@ escaped
 
 SLIDER
 582
-328
+276
 754
-361
+309
 fov-angle
 fov-angle
 0
@@ -1124,9 +1124,9 @@ HORIZONTAL
 
 SLIDER
 582
-367
+315
 754
-400
+348
 fov-radius
 fov-radius
 0
@@ -1228,10 +1228,20 @@ Environment parameters
 
 TEXTBOX
 595
-309
+257
 745
-327
+275
 Vision
+14
+0.0
+1
+
+TEXTBOX
+774
+564
+924
+683
+IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm !\nStart the fire just before to start simulation !
 14
 0.0
 1
