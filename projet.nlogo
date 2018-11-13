@@ -218,6 +218,14 @@ end
 
 to find-exit
  set obj patches in-cone fov-radius fov-angle with [pcolor = yellow]
+ if any? obj
+  [let x one-of obj ;;pour chaque sortie visible
+  if x != prefexit ;;si la sortie n'est pas celle que l'agent connaissait
+     [let r random 100
+    if r < objective-choice-chance ;;l'agent peut changer de sortie favorite selon une certaine proba
+    [set prefexit x ;;modifier la sortie préférée
+    stop]];;ne pas continuer à parcourir les sorties encore en vues
+  ]
 end
 
 to update-panic
@@ -300,19 +308,26 @@ end
 
 to-report vectObj
   let vo (list 0 0)
-  if any? obj
-  [let r random 100
-    ifelse r <= objective-choice-chance
-    [
-      let nearest-patch min-one-of obj [distance myself]
-      let d distance nearest-patch
-      set vo VectFromAngle (towards nearest-patch) (1 / d)
-    ]
-    [
-      let d distance prefexit
-      set vo VectFromAngle (towards prefexit) (1 / d)
-    ]
-  ]
+  ;;déplacé dans find-exit!!!! plus logique en terme de conception
+  ;;if any? obj
+  ;;[let r random 100
+    ;;ifelse r <= objective-choice-chance
+    ;;[
+      ;;let nearest-patch min-one-of obj [distance myself]
+      ;;let d distance nearest-patch
+      ;;set vo VectFromAngle (towards nearest-patch) (1 / d)
+    ;;]
+    ;;[
+      ;;let d distance prefexit
+      let d distance last path
+      set vo VectFromAngle (towards last path) (1 / d)
+  let x pxcor
+  let y pycor
+  let n ([neighbors] of last path) with [pxcor = x and pycor = y]
+    if any? n
+    [set path remove-item (length path - 1) path]
+    ;;]
+  ;;]
     report vo
 end
 to-report vectWithObj
@@ -320,6 +335,9 @@ to-report vectWithObj
   report vo
 end
 
+to panic-all
+  ask turtles [set panic 1]
+end
 
 to-report vectObstacles
   let vo (list 0 0)
@@ -1141,6 +1159,23 @@ BUTTON
 415
 NIL
 search-turtles
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+365
+665
+442
+698
+NIL
+panic-all
 NIL
 1
 T
