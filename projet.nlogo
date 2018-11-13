@@ -19,6 +19,17 @@ turtles-own [
   out-nodes
   current
   path ;; final path patch list
+
+;;------------------------------------
+;;
+;; Behaviour ponderation
+;;
+;;------------------------------------
+  fobj
+  fobs
+  falign
+  fseparate
+  fcohere
 ]
 
 patches-own [
@@ -47,7 +58,13 @@ to agent-spawn
       set dead false
       assign-exit
       set hp 100
-      set panic 0]
+      set panic 0
+      set fobj factor-obj
+      set fobs factor-obstacles
+      set falign factor-align
+      set fseparate factor-separate
+      set fcohere factor-cohere
+  ]
   ask turtles [if pcolor = brown [die]
     set path []
     set in-nodes []
@@ -264,8 +281,8 @@ end
 ;end
 
 to-report vectObjObstacle
-  let vobj multiplyScalarvect factor-obj vectObj
-  let vobs multiplyScalarvect factor-obstacles vectObstacles
+  let vobj multiplyScalarvect fobj vectObj
+  let vobs multiplyScalarvect fobs vectObstacles
 
   let vr additionvect vobj vobs
   report vr
@@ -285,9 +302,9 @@ end
 
 to-report vectDirect
   ifelse any? flockmates[
-  let va multiplyScalarvect factor-align vectAlign
-  let vs multiplyScalarvect factor-separate vectSeparate
-  let vc multiplyScalarvect factor-cohere vectCohere
+  let va multiplyScalarvect falign vectAlign
+  let vs multiplyScalarvect fseparate vectSeparate
+  let vc multiplyScalarvect fcohere vectCohere
 
   let vr additionvect va vs
   set vr additionvect vr vc
@@ -348,7 +365,7 @@ to-report vectObstacles
 end
 
 to-report vectWithObstacles
-  let vo multiplyScalarvect factor-obstacles vectObstacles
+  let vo multiplyScalarvect fobs vectObstacles
   report vo
 end
 
@@ -688,10 +705,10 @@ Movement ponderation
 1
 
 SLIDER
-777
-32
-949
-65
+1434
+439
+1607
+472
 attract-weight
 attract-weight
 0
@@ -703,10 +720,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-777
-69
-949
-102
+1435
+476
+1607
+509
 repuls-weight
 repuls-weight
 0
@@ -718,9 +735,9 @@ NIL
 HORIZONTAL
 
 BUTTON
-14
+169
 586
-131
+286
 619
 Start simulation
 go
@@ -735,10 +752,10 @@ NIL
 1
 
 BUTTON
-134
-586
-245
-619
+3
+625
+114
+658
 Spawn Agents
 agent-spawn
 NIL
@@ -752,10 +769,10 @@ NIL
 1
 
 BUTTON
-248
-586
-349
-619
+448
+628
+549
+661
 Spawn Walls
 spawn-walls
 NIL
@@ -769,10 +786,10 @@ NIL
 1
 
 BUTTON
-353
-586
-456
-619
+291
+587
+394
+620
 Start the fire
 start-fire
 NIL
@@ -786,20 +803,20 @@ NIL
 1
 
 TEXTBOX
-13
-639
-163
-657
+10
+592
+160
+610
 Simulation configuration
 14
 0.0
 1
 
 SLIDER
-21
-665
-193
-698
+971
+111
+1143
+144
 agent-number
 agent-number
 0
@@ -811,10 +828,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-459
-586
-577
-619
+292
+667
+410
+700
 Clear simulation
 clear
 NIL
@@ -873,10 +890,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-238
-624
-356
-657
+119
+625
+237
+658
 Draw Obstacles
 make-obstacles
 T
@@ -926,10 +943,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-360
-624
-488
-657
+334
+627
+440
+660
 Setup from Model
 import-model
 NIL
@@ -943,10 +960,10 @@ NIL
 1
 
 SLIDER
-1039
-298
-1211
-331
+778
+78
+950
+111
 factor-align
 factor-align
 0
@@ -958,10 +975,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1039
-254
-1211
-287
+778
+34
+950
+67
 factor-separate
 factor-separate
 0
@@ -973,10 +990,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1038
-345
-1210
-378
+777
+125
+949
+158
 factor-cohere
 factor-cohere
 0
@@ -988,10 +1005,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1039
-388
-1211
-421
+778
+168
+950
+201
 factor-obstacles
 factor-obstacles
 0
@@ -1003,10 +1020,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-22
-702
-194
-735
+972
+148
+1144
+181
 fire-proba
 fire-proba
 0
@@ -1018,10 +1035,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-21
-738
-193
-771
+971
+184
+1143
+217
 smoke-proba
 smoke-proba
 0
@@ -1033,10 +1050,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-841
-504
-1013
-537
+972
+35
+1144
+68
 smoke-damage
 smoke-damage
 0
@@ -1048,10 +1065,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-843
-541
-1015
-574
+972
+72
+1144
+105
 fire-damage
 fire-damage
 0
@@ -1063,10 +1080,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-250
-671
-335
-704
+243
+625
+328
+658
 Draw Exit
 make-exit
 T
@@ -1091,10 +1108,10 @@ escaped
 11
 
 SLIDER
-1040
-595
-1212
-628
+582
+328
+754
+361
 fov-angle
 fov-angle
 0
@@ -1106,10 +1123,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1042
-634
-1214
-667
+582
+367
+754
+400
 fov-radius
 fov-radius
 0
@@ -1121,10 +1138,10 @@ patches
 HORIZONTAL
 
 SLIDER
-1039
-431
-1211
-464
+778
+211
+950
+244
 factor-obj
 factor-obj
 0
@@ -1151,11 +1168,11 @@ NIL
 HORIZONTAL
 
 BUTTON
-696
-382
-805
-415
-NIL
+399
+587
+554
+620
+Compute A* Algorithm
 search-turtles
 NIL
 1
@@ -1168,11 +1185,11 @@ NIL
 1
 
 BUTTON
-365
-665
-442
-698
-NIL
+82
+669
+199
+702
+Panic all agents
 panic-all
 NIL
 1
@@ -1185,10 +1202,10 @@ NIL
 1
 
 SLIDER
-593
-267
-765
-300
+584
+264
+756
+297
 next-patch-range
 next-patch-range
 0
@@ -1198,6 +1215,26 @@ next-patch-range
 1
 NIL
 HORIZONTAL
+
+TEXTBOX
+985
+10
+1173
+34
+Environment parameters
+14
+0.0
+1
+
+TEXTBOX
+595
+309
+745
+327
+Vision
+14
+0.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
