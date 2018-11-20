@@ -1,48 +1,18 @@
+__includes ["parcours.nls" "vector.nls" "movement.nls"]
+
 globals [collisions escaped]
 
 turtles-own [
-  obstacles          ;; agentset of neaby obstacles
-  flockmates         ;; agentset of nearby turtles
-  nearest-neighbor   ;; closest one of our flockmates
   dead
   hp
   obj
   panic
-
-;;------------------------------------
-;;
-;; Parcours
-;;
-;;------------------------------------
-  prefexit
-  in-nodes
-  out-nodes
-  current
-  path ;; final path patch list
-
-;;------------------------------------
-;;
-;; Behaviour ponderation
-;;
-;;------------------------------------
-  fobj
-  fobs
-  falign
-  fseparate
-  fcohere
 ]
 
 patches-own [
  material
  onFire
  onSmoke
- obstacle
- ;;parcours
- noir
- blanc
- bleu
- vert
- exit
 ]
 ;;setup simulation
 
@@ -81,13 +51,6 @@ to agent-spawn
   reset-ticks
 end
 
-to make-obstacles
-  if mouse-down?
-  [ ask patches
-    [ if ((abs (pxcor - mouse-xcor)) < 1) and ((abs (pycor - mouse-ycor)) < 1)
-      [ set pcolor brown set obstacle true]]]
-  display
-end
 
 to make-exit
   if mouse-down?
@@ -98,19 +61,6 @@ to make-exit
   display
 end
 
-to spawn-walls
-  ask patches [ if random-float 1.0 < 0.04 [ set pcolor brown set obstacle true] ]
-  reset-ticks
-end
-
-to import-model
-  ;;model : model.png, size : 32x32
-  import-pcolors "model.png"
-  ask patches [set onfire false]
-  ask patches [if pcolor != black
-    [set pcolor brown set obstacle true]]
-  reset-ticks
-end
 ;;simulation treatment
 
 to spread-fire
@@ -184,59 +134,7 @@ to go
   tick
 end
 
-;;turtle movements procedure
 
-;to flock
-;  avoid-obstacles
-;  let a angleFromVect vectDirect
-;  turn-towards a max-angle-turn
-;end
-
-
-to floc  ;; turtle procedure
-  find-flockmates
-  find-obstacles
-  find-exit
-
-  ifelse any? obj
-  [
-    let v vectObjObstacle
-    let a angleFromVect v
-    let s magnitude v
-    turn-towards a max-angle-turn
-  ]
-  [
-    ifelse any? flockmates
-    [let  v  vectDirect
-      let a angleFromVect v
-      let s magnitude v
-      turn-towards a max-angle-turn
-      let f 0
-    ]
-    [ if any? obstacles
-      [let v vectWithObstacles
-        let a angleFromVect v
-        let s magnitude v
-        turn-towards a max-angle-turn
-        let f 0
-      ]
-    ]
-  ]
-end
-
-to flock
-  find-flockmates
-  find-obstacles
-  find-exit
-
-  let v vectObjObstacle
-  let v2 vectDirect
-
-  let vr additionvect v v2
-
-  let a angleFromVect vr
-  turn-towards a max-angle-turn
-end
 
 to find-exit
  set obj patches in-cone fov-radius fov-angle with [pcolor = yellow]
@@ -257,185 +155,12 @@ to update-panic
   if any? fire [set panic 1]
 end
 
-to find-obstacles
-  set obstacles patches in-cone fov-radius fov-angle with [pcolor = brown or pcolor = red ];or pcolor = grey]
-end
-
-to find-flockmates  ;; turtle procedure
-  set flockmates other turtles with  [color != red] in-radius fov-radius
-end
-
-to find-nearest-neighbor ;; turtle procedure
-  set nearest-neighbor min-one-of flockmates [distance myself]
-end
-
-to-report magnitude [vect]
-   let x item 0 vect
-   let y item 1 vect
-   let r x * x + y * y
-   report sqrt r
-end
-
-;to-report vectDirect
-  ;;let va multiplyScalarvect attract-weight vectAttract
-  ;;let vs multiplyScalarvect repuls-weight vectRepuls
-
-  ;;let vr additionvect va vs
-
-  ;report 0
-;end
-
-to-report vectObjObstacle
-  let vobj multiplyScalarvect fobj vectObj
-  let vobs multiplyScalarvect fobs vectObstacles
-
-  let vr additionvect vobj vobs
-  report vr
-end
-
-;;to-report vectDirect
-;;  let va multiplyScalarvect factor-align vectAlign
- ;; let vs multiplyScalarvect factor-separate vectSeparate
-;;  let vc multiplyScalarvect factor-cohere vectCohere
-;;  let vo multiplyScalarvect factor-obstacles vectObstacles
-
-;;  let vr additionvect va vs
-;;  set vr additionvect vr vc
-;;  set vr additionvect vr vo
-;;  report vr
-;;end
-
-to-report vectDirect
-  ifelse any? flockmates[
-  let va multiplyScalarvect falign vectAlign
-  let vs multiplyScalarvect fseparate vectSeparate
-  let vc multiplyScalarvect fcohere vectCohere
-
-  let vr additionvect va vs
-  set vr additionvect vr vc
-  report vr]
-  [report (list 0 0)]
-end
-
-
-to-report vectOb
-  let vo (list 0 0)
-  if any? obj [
-    let nearest-patch min-one-of obj [distance myself]
-    let d distance nearest-patch
-    set vo VectFromAngle (towards nearest-patch) (1 / d)
-  ]
-  report vo
-end
-
-to-report vectObj
-  let vo (list 0 0)
-  ;;déplacé dans find-exit!!!! plus logique en terme de conception
-  ;;if any? obj
-  ;;[let r random 100
-    ;;ifelse r <= objective-choice-chance
-    ;;[
-      ;;let nearest-patch min-one-of obj [distance myself]
-      ;;let d distance nearest-patch
-      ;;set vo VectFromAngle (towards nearest-patch) (1 / d)
-    ;;]
-    ;;[
-      ;;let d distance prefexit
-      let d distance last path
-      set vo VectFromAngle (towards last path) (1 / d)
-    if d < next-patch-range
-    [if length path > 1
-    [set path remove-item (length path - 1) path]]
-    ;;]
-  ;;]
-    report vo
-end
-to-report vectWithObj
-  let vo multiplyScalarvect 1 vectObj
-  report vo
-end
 
 to panic-all
   ask turtles [set panic 1]
 end
 
-to-report vectObstacles
-  let vo (list 0 0)
-  if any? obstacles [
-    let nearest-patch min-one-of obstacles [distance myself]
-    let d distance nearest-patch
-    set vo VectFromAngle ((towards nearest-patch) + 180) (1 / d)
-  ]
-  report vo
-end
 
-to-report vectWithObstacles
-  let vo multiplyScalarvect fobs vectObstacles
-  report vo
-end
-
-to-report vectSeparate
-  let vs 0
-  find-nearest-neighbor
-  ifelse (nearest-neighbor = nobody)
-  [set vs VectFromAngle random 180 0]
-  [set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)]
-  report vs
-end
-
-to-report vectAlign
-  let n count flockmates
-  let x-component (sum [dx] of flockmates) / n
-  let y-component (sum [dy] of flockmates) / n
-  report (list x-component y-component)
-;  report (list (x-component - dx) (y-component - dy))
-end
-
-to-report vectCohere
-  let x-component mean [sin (towards myself + 180)] of flockmates
-  let y-component mean [cos (towards myself + 180)] of flockmates
-  report (list x-component y-component)
-end
-
-;to-report vectRepuls
- ; let vs 0
- ; set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)
- ; report vs
-;end
-
-;to-report vectAttract
-;  let vs 0
-;  set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)
-;  report vs
-;end
-
-to check-coll
-  ifelse (pcolor = red or pcolor = brown)[
-    bk 1
-    rt random 20
-    lt random 20
-  ]
-  [
-    fd 1
-  ]
-end
-
-to turn-towards [new-heading max-turn]  ;; turtle procedure
-  turn-at-most (subtract-headings new-heading heading) max-turn
-end
-
-
-to turn-away [new-heading max-turn]  ;; turtle procedure
-  turn-at-most (subtract-headings heading new-heading) max-turn
-end
-
-to turn-at-most [turn max-turn]  ;; turtle procedure
-  ifelse abs turn > max-turn
-    [ ifelse turn > 0
-        [ rt max-turn ]
-        [ lt max-turn ] ]
-    [ rt turn ]
-end
 
 ;;global simulation functions
 
@@ -446,204 +171,6 @@ end
 to clear
   clear-all
   reset-ticks
-end
-
-;;------------------------------------
-;;
-;; Vector
-;;
-;;------------------------------------
-
-;;vector functions
-to-report angleFromVect [vect]
-    ifelse ((item 0 vect = 0) and (item 1 vect = 0))[
-    report random 360 ;report 0
-  ][
-    let a atan item 0  vect item 1 vect
-    report a
-  ]
-end
-
-to-report vectFromAngle [angle len]
-  let l (list (len * sin angle) (len * cos angle))
-  report l
-end
-
-to-report multiplyScalarvect [factor vect]
-  report (list (item 0 vect * factor) (item 1 vect * factor))
-end
-
-to-report additionvect [v1 v2]
-  report (list (item 0 v1 + item 0 v2) (item 1 v1 + item 1 v2) )
-end
-
-
-
-;;------------------------------------
-;;
-;; A*
-;;
-;;------------------------------------
-
-to search-turtles
-  ask turtles [search]
-  tick
-end
-
-to search
-  while [get-patch current != prefexit] [
-  search-step
-  ]
-  print "Success!!"
-  ask patches with [blanc = true] [set blanc false]
-  ask patches with [bleu = true] [set bleu false]
-  draw-path current
-end
-
-to search-step
-  ;; let new-nodes generate
-  set in-nodes merge-nodes generate in-nodes
-
-  set in-nodes sort-nodes in-nodes
-  if in-nodes = []
-  [stop]
-  let proposed first in-nodes
-  if (proposed = [])[
-    stop
-  ]
-  set current proposed
-  set in-nodes bf in-nodes
-  set out-nodes (fput (get-patch current) out-nodes) ;; we only put patches in the out-nodes list
-
-  ask (get-patch current) [if (vert != true)[set bleu true]]
-end
-
-to-report generate
-  let aset nobody
-  set aset ([neighbors] of (get-patch current)) with [obstacle != true];[obstacle = 0]  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  ifelse (any? aset) [
-    ask aset  [if (blanc != true  and bleu != true)[set blanc true]]
-    let lst1 [self] of aset ;; transformer en listes...
-                            ;; show (sentence "aset : " lst1)
-    set lst1 (remove-nodes lst1 out-nodes) ;; delete nodes which have already been visited
-    let result map [ ?1 -> make-node ?1 current ] lst1 ;; make a list of nodes [patch value]
-    report result
-  ]
-  [
-    show (sentence "blocked ;-) ")
-    report []
-  ]
-end
-
-to-report sort-nodes [lst-nodes]
-   ; let lst sort-by [(cost ?1) < (cost ?2)] lst-nodes
-   let lst sort-by [ [?1 ?2] -> (get-val ?1) < (get-val ?2) ] lst-nodes
-   if (lst = []) [
-     (show "pas de solution !!" )
-    report []
-   ]
-   report lst
-end
-
-to-report merge-nodes [lst-new lst-ref]
-  let res []
-  ;set lst-ref sort-by [(cost ?1) < (cost ?2)] lst-ref
-  let lst map get-patch lst-ref
-  while [lst-new != []] [
-    let node (first lst-new)
-    let pos position (get-patch node) lst
-    ifelse (pos = false)[
-      set res (fput node res)
-    ][
-      let v 0
-      let g 0
-      let p current
-      ifelse ((cost node) < (cost (item pos lst-ref))) [
-        set v get-val node
-        set g get-cost node
-        set p current
-      ][
-       set v get-val (item pos lst-ref)
-        set g get-cost (item pos lst-ref)
-      ]
-      ;; reconstruct the node
-      set res (fput (list (get-patch node) v g p) res)
-      ;; suppress the node from old list
-      set lst-ref remove-item pos lst-ref
-      set lst map get-patch lst-ref
-    ]
-    set lst-new (bf lst-new)
-  ]
-  set res (sentence res lst-ref)
-  report res
-end
-
-to-report remove-nodes [lst ref-lst]
-  let res []
-  while [lst != []] [
-    if not member? (first lst) ref-lst [
-      set res (fput (first lst) res)
-    ]
-    set lst (bf lst)
-  ]
-  report res
-end
-
-to-report make-node [p n]
-  let r 0
-    let g 1 + get-cost n
-    let h distance-to-goal p
-    ;; Note: holds the cost and the parent.
-    ;; Used by A* algorithm
-    set r (list p h g n)
-  report r
-end
-
-
-;;------------------------------------
-;;
-;; Utilitaires
-;;
-;;------------------------------------
-
-to draw-path [node]
-  while [node != []] [
-    set path lput get-patch node path
-    ;;ask get-patch node [set pcolor green]
-    set node get-parent node
-  ]
-end
-
-to-report cost [node]
-     report (get-cost node)
-end
-
-to-report distance-to-goal [p]
-  let r 0
-  set r [distance p] of prefexit
- ;; show (sentence "distance from " p " to " goal " = " r)
-  report r
-end
-
-to-report init-current
-  report (list patch-here distance-to-goal patch-here 0 [])
-end
-
-;; get the patch
-to-report get-patch [node]
-  report first node
-end
-;; get the value of the node
-to-report get-val [node]
-  report item 1 node
-end
-
-to-report get-cost [node]
-  report item 2 node
-end
-
-to-report get-parent [node]
-  report item 3 node
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
