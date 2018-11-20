@@ -495,8 +495,9 @@ to search
   search-step
   ]
   print "Success!!"
-  ask patches with [blanc = true] [set blanc false]
-  ask patches with [bleu = true] [set bleu false]
+  ask patches with [] [set pcolor black]
+  ask patches with [pcolor = white] [set pcolor black]
+  ask patches with [exit = true] [set pcolor yellow]
   draw-path current
 end
 
