@@ -352,7 +352,7 @@ agent-number
 agent-number
 0
 100
-1.0
+7.0
 1
 1
 NIL
@@ -677,7 +677,7 @@ factor-obj
 factor-obj
 0
 1
-0.7
+1.0
 0.1
 1
 NIL
@@ -776,6 +776,25 @@ IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm
 14
 0.0
 1
+
+PLOT
+600
+393
+891
+543
+Population
+temps
+Agent
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Escaped" 1.0 0 -1184463 true "" "plot escaped"
+"Total" 1.0 0 -16777216 true "" "plot count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
