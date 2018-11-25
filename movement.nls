@@ -84,15 +84,24 @@ end
 to flock
   find-flockmates
   find-obstacles
-  find-exit
+ ; find-exit
 
-  let v vectObjObstacle
+  let v vectObstacles ;vectObjObstacles
   let v2 vectDirect
 
   let vr additionvect v v2
 
   let a angleFromVect vr
   turn-towards a max-angle-turn
+end
+
+to A*
+  ;find-exit
+  
+  let vr vectObj
+  
+  let a angleFromVect vr
+  turn-towards a max-angle-turn  
 end
 
 to find-obstacles
@@ -182,6 +191,7 @@ to-report vectObj
   ;;]
     report vo
 end
+
 to-report vectWithObj
   let vo multiplyScalarvect 1 vectObj
   report vo

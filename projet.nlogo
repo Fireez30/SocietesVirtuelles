@@ -6,7 +6,7 @@ turtles-own [
   dead
   hp
   obj
-  panic
+  panic ; 0 = nothing  1 = panic A*  2 = panic flock
 ]
 
 patches-own [
@@ -122,8 +122,9 @@ end
 to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
-  ask turtles with [dead = false] [update-panic damage count-collisions]
-  ask turtles with [panic = 1 and dead = false] [flock check-coll]
+  ask turtles with [dead = false] [update-panic color-panic damage count-collisions]
+  ask turtles with [panic = 1 and dead = false] [A* check-coll]
+  ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll]
   ask turtles [check-death damage clear-body escape]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
@@ -148,11 +149,35 @@ to find-exit
   ]
 end
 
+to see-exit
+  let ex patches in-cone fov-radius fov-angle with [pcolor = yellow]
+  if any? ex
+  [ set heading towards one-of ex ]
+end
+
 to update-panic
-  let others turtles in-cone fov-radius fov-angle with [panic = 1]
-  if any? others [set panic 1  set color yellow]
+  let others turtles in-cone fov-radius fov-angle with [panic != 0]
+  if any? others and panic = 0 [set panic 1]
   let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
-  if any? fire [set panic 1]
+  if any? fire
+  [
+    ifelse panic = 0
+    [
+      set panic 1
+    ]
+    [
+      let r random 100
+      if r <= more_panic_proba
+      [
+        set panic 2
+      ]
+    ]
+  ]
+end
+
+to color-panic
+  if panic = 1 [set color yellow]
+  if panic = 2 [set color orange]
 end
 
 
@@ -589,7 +614,7 @@ smoke-damage
 smoke-damage
 0
 50
-5.0
+4.0
 1
 1
 NIL
@@ -628,10 +653,10 @@ NIL
 1
 
 MONITOR
-1482
-103
-1541
-148
+1485
+159
+1544
+204
 NIL
 escaped
 17
@@ -692,7 +717,7 @@ objective-choice-chance
 objective-choice-chance
 0
 100
-79.0
+10.0
 1
 1
 NIL
@@ -795,6 +820,42 @@ true
 PENS
 "Escaped" 1.0 0 -1184463 true "" "plot escaped"
 "Total" 1.0 0 -16777216 true "" "plot count turtles"
+
+MONITOR
+1485
+110
+1542
+155
+agents
+count turtles
+17
+1
+11
+
+TEXTBOX
+1205
+10
+1355
+28
+Panic
+14
+0.0
+1
+
+SLIDER
+1198
+33
+1370
+66
+more_panic_proba
+more_panic_proba
+0
+100
+2.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
