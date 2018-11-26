@@ -32,7 +32,8 @@ to agent-spawn
       setxy random-xcor random-ycor
       set dead false
       assign-exit
-      set hp 100
+      let r random (2 * life-variation)
+      set hp base-life + (r - 20)
       set panic 0
       set fobj factor-obj
       set fobs factor-obstacles
@@ -666,9 +667,9 @@ escaped
 
 SLIDER
 582
-276
+357
 754
-309
+390
 fov-angle
 fov-angle
 0
@@ -681,9 +682,9 @@ HORIZONTAL
 
 SLIDER
 582
-315
+396
 754
-348
+429
 fov-radius
 fov-radius
 0
@@ -785,9 +786,9 @@ Environment parameters
 
 TEXTBOX
 595
-257
+338
 745
-275
+356
 Vision
 14
 0.0
@@ -805,9 +806,9 @@ IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm
 
 PLOT
 600
-393
+474
 891
-543
+624
 Population
 temps
 Agent
@@ -854,6 +855,36 @@ more_panic_proba
 100
 2.0
 1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+584
+198
+756
+231
+life-variation
+life-variation
+0
+50
+20.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+583
+238
+755
+271
+base-life
+base-life
+0
+200
+100.0
+10
 1
 NIL
 HORIZONTAL
