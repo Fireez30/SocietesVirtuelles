@@ -7,6 +7,7 @@ turtles-own [
   hp
   obj
   panic ; 0 = nothing  1 = panic A*  2 = panic flock
+  speed
 ]
 
 patches-own [
@@ -33,8 +34,10 @@ to agent-spawn
       set dead false
       assign-exit
       let r random (2 * life-variation)
-      set hp base-life + (r - 20)
+      set hp base-life + (r - life-variation)
       set panic 0
+      let t random (2 * speed-variation)
+      set speed base-speed + (t - speed-variation)
       set fobj factor-obj
       set fobs factor-obstacles
       set falign factor-align
@@ -666,10 +669,10 @@ escaped
 11
 
 SLIDER
-582
-357
-754
-390
+584
+393
+756
+426
 fov-angle
 fov-angle
 0
@@ -681,10 +684,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-582
-396
-754
-429
+584
+432
+756
+465
 fov-radius
 fov-radius
 0
@@ -785,10 +788,10 @@ Environment parameters
 1
 
 TEXTBOX
-595
-338
-745
-356
+597
+374
+747
+392
 Vision
 14
 0.0
@@ -805,10 +808,10 @@ IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm
 1
 
 PLOT
-600
-474
-891
-624
+602
+510
+893
+660
 Population
 temps
 Agent
@@ -885,6 +888,36 @@ base-life
 200
 100.0
 10
+1
+NIL
+HORIZONTAL
+
+SLIDER
+583
+276
+755
+309
+base-speed
+base-speed
+0
+2
+1.0
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+581
+314
+753
+347
+speed-variation
+speed-variation
+0
+1
+0.2
+0.1
 1
 NIL
 HORIZONTAL

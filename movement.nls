@@ -251,12 +251,12 @@ end
 
 to check-coll
   ifelse (pcolor = red or pcolor = brown)[
-    bk 1
+    bk speed
     rt random 20
     lt random 20
   ]
   [
-    fd 1
+    fd speed
   ]
 end
 
