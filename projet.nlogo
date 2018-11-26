@@ -157,9 +157,10 @@ end
 
 to update-panic
   let others turtles in-cone fov-radius fov-angle with [panic != 0]
-  if any? others and panic = 0 [set panic 1]
+  let deads turtles in-cone fov-radius fov-angle with [color = green]
+  if any? others  and panic = 0 [set panic 1]
   let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
-  if any? fire
+  if any? fire or any? deads
   [
     ifelse panic = 0
     [
