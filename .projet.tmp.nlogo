@@ -174,11 +174,17 @@ to update-panic
       set panic 1
     ]
     [
-      let r random 100
-      if r <= panic_proba
+      ifelse panic = 1
       [
-        set panic 2
+        let r random 100
+        if r <= panic_proba
+        [
+          set panic 2
+        ]
+      ][
+
       ]
+
     ]
   ]
 end
@@ -919,7 +925,7 @@ speed-variation
 speed-variation
 0
 1
-0.2
+0.4
 0.1
 1
 NIL

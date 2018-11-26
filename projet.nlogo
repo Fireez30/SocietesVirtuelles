@@ -174,11 +174,21 @@ to update-panic
       set panic 1
     ]
     [
-      let r random 100
-      if r <= panic_proba
+      ifelse panic = 1
       [
-        set panic 2
+        let r random 100
+        if r <= panic_proba
+        [
+          set panic 2
+        ]
+      ][
+        let r random 100
+        if r <= panic_proba
+        [
+          set panic 1
+        ]
       ]
+
     ]
   ]
 end
