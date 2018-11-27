@@ -97,7 +97,8 @@ end
 
 to A*
   ;find-exit
-  
+  find-obstacles
+  ;if any? obstacles [ search ]
   let vr vectObj
   
   let a angleFromVect vr

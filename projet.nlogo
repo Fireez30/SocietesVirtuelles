@@ -1,6 +1,6 @@
 __includes ["parcours.nls" "vector.nls" "movement.nls"]
 
-globals [collisions escaped]
+globals [collisions escaped escaped-1 escaped-2 escaped-3]
 
 turtles-own [
   dead
@@ -8,7 +8,9 @@ turtles-own [
   obj
   panic ; 0 = nothing  1 = panic A*  2 = panic flock
   speed
-  panic_proba
+  panic-proba
+
+  agent-type ;1/2/3
 ]
 
 patches-own [
@@ -34,13 +36,33 @@ to agent-spawn
       setxy random-xcor random-ycor
       set dead false
       assign-exit
-      let r random (2 * life-variation)
-      set hp base-life + (r - life-variation)
       set panic 0
-      let t random-float (2 * speed-variation)
-      set speed base-speed + (t - speed-variation)
-      let p random (2 * more_panic_variation)
-      set panic_proba more_panic_proba + (p - more_panic_variation)
+
+      let r random 100
+      ifelse r <= presence-type-1
+      [
+        set agent-type 1
+        set hp base-life-1
+        set speed base-speed-1
+        set panic-proba more-panic-proba-1
+      ]
+      [
+        ifelse r > presence-type-1 and r <= presence-type-1 + presence-type-2
+        [
+          set agent-type 2
+          set hp base-life-2
+          set speed base-speed-2
+          set panic-proba more-panic-proba-2
+        ]
+        [; -> if r > presence-type-1 + presence-type-2
+          set agent-type 3
+          set hp base-life-3
+          set speed base-speed-3
+          set panic-proba more-panic-proba-3
+        ]
+
+      ]
+
       set fobj factor-obj
       set fobs factor-obstacles
       set falign factor-align
@@ -122,7 +144,13 @@ end
 to escape
   if pcolor = yellow
   [ set escaped escaped + 1
-    die]
+
+    if agent-type = 1 [set escaped-1 escaped-1 + 1]
+    if agent-type = 2 [set escaped-2 escaped-2 + 1]
+    if agent-type = 3 [set escaped-3 escaped-3 + 1]
+
+    die
+  ]
 end
 
 
@@ -130,7 +158,7 @@ to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
   ask turtles with [dead = false] [update-panic color-panic damage count-collisions]
-  ask turtles with [panic = 1 and dead = false] [A* check-coll]
+  ask turtles with [panic = 1 and dead = false] [A* see-exit check-coll]
   ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll]
   ask turtles [check-death damage clear-body escape]
   ;; the following line is used to make the turtles
@@ -177,13 +205,13 @@ to update-panic
       ifelse panic = 1
       [
         let r random 100
-        if r <= panic_proba
+        if r <= panic-proba
         [
           set panic 2
         ]
       ][
         let r random 100
-        if r <= panic_proba
+        if r <= panic-proba
         [
           set panic 1
         ]
@@ -243,21 +271,6 @@ GRAPHICS-WINDOW
 ticks
 30.0
 
-SLIDER
-1434
-512
-1606
-545
-percept-cone-degree
-percept-cone-degree
-0
-100
-0.0
-1
-1
-NIL
-HORIZONTAL
-
 TEXTBOX
 615
 10
@@ -277,36 +290,6 @@ Movement ponderation
 14
 0.0
 1
-
-SLIDER
-1434
-439
-1607
-472
-attract-weight
-attract-weight
-0
-1
-0.0
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1435
-476
-1607
-509
-repuls-weight
-repuls-weight
-0
-1
-0.0
-0.05
-1
-NIL
-HORIZONTAL
 
 BUTTON
 169
@@ -395,7 +378,7 @@ agent-number
 agent-number
 0
 100
-7.0
+10.0
 1
 1
 NIL
@@ -419,21 +402,6 @@ NIL
 1
 
 SLIDER
-1435
-549
-1607
-582
-angle-avoidance
-angle-avoidance
-0
-360
-0.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
 586
 35
 758
@@ -444,21 +412,6 @@ min-dist
 20
 0.0
 0.5
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1436
-589
-1608
-622
-max-avoidance-turn
-max-avoidance-turn
-0
-50
-0.0
-1
 1
 NIL
 HORIZONTAL
@@ -811,10 +764,10 @@ Vision
 1
 
 TEXTBOX
-1264
-287
-1620
-406
+788
+267
+1144
+338
 IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm !\nStart the fire just before to start simulation !
 14
 0.0
@@ -869,7 +822,7 @@ more_panic_proba
 more_panic_proba
 more_panic_variation
 100
-5.0
+0.0
 1
 1
 NIL
@@ -884,7 +837,7 @@ life-variation
 life-variation
 0
 50
-20.0
+0.0
 1
 1
 NIL
@@ -899,7 +852,7 @@ base-life
 base-life
 0
 200
-100.0
+0.0
 10
 1
 NIL
@@ -914,7 +867,7 @@ base-speed
 base-speed
 0
 2
-1.0
+0.0
 0.1
 1
 NIL
@@ -929,7 +882,7 @@ speed-variation
 speed-variation
 0
 1
-0.4
+0.0
 0.1
 1
 NIL
@@ -944,11 +897,244 @@ more_panic_variation
 more_panic_variation
 0
 50
-5.0
+0.0
 1
 1
 NIL
 HORIZONTAL
+
+TEXTBOX
+977
+352
+1127
+370
+Type 1
+14
+0.0
+1
+
+TEXTBOX
+1164
+353
+1314
+371
+Type 2
+14
+0.0
+1
+
+TEXTBOX
+1351
+354
+1501
+372
+Type 3
+14
+0.0
+1
+
+SLIDER
+922
+384
+1094
+417
+base-life-1
+base-life-1
+0
+150
+60.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+922
+428
+1094
+461
+base-speed-1
+base-speed-1
+0
+2
+0.4
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+922
+469
+1094
+502
+more-panic-proba-1
+more-panic-proba-1
+0
+100
+80.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1102
+383
+1274
+416
+base-life-2
+base-life-2
+0
+150
+150.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1285
+383
+1457
+416
+base-life-3
+base-life-3
+0
+150
+100.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+923
+524
+1095
+557
+presence-type-1
+presence-type-1
+0
+100 - presence-type-2 - presence-type-3
+34.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1103
+428
+1275
+461
+base-speed-2
+base-speed-2
+0
+2
+1.2
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1285
+428
+1457
+461
+base-speed-3
+base-speed-3
+0
+2
+2.0
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1102
+469
+1274
+502
+more-panic-proba-2
+more-panic-proba-2
+0
+100
+20.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1287
+469
+1459
+502
+more-panic-proba-3
+more-panic-proba-3
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1103
+524
+1275
+557
+presence-type-2
+presence-type-2
+0
+100 - presence-type-1 - presence-type-3
+33.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1287
+523
+1459
+556
+presence-type-3
+presence-type-3
+0
+100 - presence-type-1 - presence-type-2
+33.0
+1
+1
+NIL
+HORIZONTAL
+
+PLOT
+925
+566
+1458
+716
+Agent Type Population
+temps
+agent
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Type 1" 1.0 0 -5825686 true "" "plot count turtles with [agent-type = 1]"
+"Type 2" 1.0 0 -11221820 true "" "plot count turtles with [agent-type = 2]"
+"Type 3" 1.0 0 -2674135 true "" "plot count turtles with [agent-type = 3]"
+"Escaped type 1" 1.0 0 -8630108 true "" "plot escaped-1"
+"Escaped type 2" 1.0 0 -13345367 true "" "plot escaped-2"
+"Escaped type 3" 1.0 0 -955883 true "" "plot escaped-3"
 
 @#$#@#$#@
 ## WHAT IS IT?
