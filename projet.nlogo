@@ -11,6 +11,7 @@ turtles-own [
   panic-proba
 
   agent-type ;1/2/3
+  inner-timer
 ]
 
 patches-own [
@@ -45,6 +46,7 @@ to agent-spawn
         set hp base-life-1
         set speed base-speed-1
         set panic-proba more-panic-proba-1
+        set inner-timer panic-timer-1
       ]
       [
         ifelse r > presence-type-1 and r <= presence-type-1 + presence-type-2
@@ -53,12 +55,14 @@ to agent-spawn
           set hp base-life-2
           set speed base-speed-2
           set panic-proba more-panic-proba-2
+          set inner-timer panic-timer-2
         ]
         [; -> if r > presence-type-1 + presence-type-2
           set agent-type 3
           set hp base-life-3
           set speed base-speed-3
           set panic-proba more-panic-proba-3
+          set inner-timer panic-timer-3
         ]
 
       ]
@@ -159,7 +163,7 @@ to go
   ask patches with [onSmoke = true] [update-color spread-smoke]
   ask turtles with [dead = false] [update-panic color-panic damage count-collisions]
   ask turtles with [panic = 1 and dead = false] [A* see-exit check-coll]
-  ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll]
+  ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll set inner-timer inner-timer - 1]
   ask turtles [check-death damage clear-body escape]
   ;; the following line is used to make the turtles
   ;; animate more smoothly.
@@ -202,23 +206,27 @@ to update-panic
       set panic 1
     ]
     [
-      ifelse panic = 1
+      if panic = 1
       [
         let r random 100
         if r <= panic-proba
         [
           set panic 2
-        ]
-      ][
-        let r random 100
-        if r <= panic-proba
-        [
-          set panic 1
+          if agent-type = 1 [ set speed speed + sprint-1 ]
+          if agent-type = 2 [ set speed speed + sprint-2 ]
+          if agent-type = 3 [ set speed speed + sprint-3 ]
         ]
       ]
-
     ]
   ]
+
+   if panic = 2 and inner-timer <= 0
+    [
+      set panic 1
+      if agent-type = 1 [ set speed speed - sprint-1 set inner-timer panic-timer-1 ]
+      if agent-type = 2 [ set speed speed - sprint-2 set inner-timer panic-timer-2 ]
+      if agent-type = 3 [ set speed speed - sprint-3 set inner-timer panic-timer-3 ]
+    ]
 end
 
 to color-panic
@@ -764,10 +772,10 @@ Vision
 1
 
 TEXTBOX
-788
-267
-1144
-338
+588
+255
+944
+326
 IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm !\nStart the fire just before to start simulation !
 14
 0.0
@@ -813,71 +821,41 @@ Panic
 0.0
 1
 
-SLIDER
-1198
-33
-1370
-66
-more_panic_proba
-more_panic_proba
-more_panic_variation
-100
-0.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1198
-69
-1370
-102
-more_panic_variation
-more_panic_variation
-0
-50
-0.0
-1
-1
-NIL
-HORIZONTAL
-
 TEXTBOX
-977
-352
-1127
-370
-Type 1
+979
+285
+1129
+303
+Type 1 (vieu)
 14
 0.0
 1
 
 TEXTBOX
-1164
-353
-1314
-371
-Type 2
+1166
+286
+1316
+304
+Type 2 (adulte)
 14
 0.0
 1
 
 TEXTBOX
-1351
-354
-1501
-372
-Type 3
+1353
+287
+1503
+305
+Type 3 (enfant)
 14
 0.0
 1
 
 SLIDER
-922
-384
-1094
-417
+924
+317
+1096
+350
 base-life-1
 base-life-1
 0
@@ -889,10 +867,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-922
-428
-1094
-461
+924
+361
+1096
+394
 base-speed-1
 base-speed-1
 0
@@ -904,10 +882,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-922
-469
-1094
-502
+924
+402
+1096
+435
 more-panic-proba-1
 more-panic-proba-1
 0
@@ -919,10 +897,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1102
-383
-1274
-416
+1104
+316
+1276
+349
 base-life-2
 base-life-2
 0
@@ -934,25 +912,25 @@ NIL
 HORIZONTAL
 
 SLIDER
-1285
-383
-1457
-416
+1287
+316
+1459
+349
 base-life-3
 base-life-3
 0
 150
-100.0
+90.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-923
-524
-1095
-557
+924
+440
+1096
+473
 presence-type-1
 presence-type-1
 0
@@ -964,10 +942,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1103
-428
-1275
-461
+1105
+361
+1277
+394
 base-speed-2
 base-speed-2
 0
@@ -979,10 +957,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1285
-428
-1457
-461
+1287
+361
+1459
+394
 base-speed-3
 base-speed-3
 0
@@ -994,10 +972,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1102
-469
-1274
-502
+1104
+402
+1276
+435
 more-panic-proba-2
 more-panic-proba-2
 0
@@ -1009,10 +987,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1287
-469
-1459
-502
+1289
+402
+1461
+435
 more-panic-proba-3
 more-panic-proba-3
 0
@@ -1024,10 +1002,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1103
-524
-1275
-557
+1104
+440
+1276
+473
 presence-type-2
 presence-type-2
 0
@@ -1039,10 +1017,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1287
-523
-1459
-556
+1288
+439
+1460
+472
 presence-type-3
 presence-type-3
 0
@@ -1075,6 +1053,96 @@ PENS
 "Escaped type 1" 1.0 0 -8630108 true "" "plot escaped-1"
 "Escaped type 2" 1.0 0 -13345367 true "" "plot escaped-2"
 "Escaped type 3" 1.0 0 -955883 true "" "plot escaped-3"
+
+SLIDER
+924
+481
+1096
+514
+sprint-1
+sprint-1
+0
+1.0
+0.2
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1104
+481
+1276
+514
+sprint-2
+sprint-2
+0
+1
+0.5
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1288
+481
+1460
+514
+sprint-3
+sprint-3
+0
+1
+1.0
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+925
+519
+1097
+552
+panic-timer-1
+panic-timer-1
+0
+20
+12.0
+1
+1
+tick
+HORIZONTAL
+
+SLIDER
+1104
+520
+1276
+553
+panic-timer-2
+panic-timer-2
+0
+20
+6.0
+1
+1
+tick
+HORIZONTAL
+
+SLIDER
+1289
+520
+1461
+553
+panic-timer-3
+panic-timer-3
+0
+20
+20.0
+1
+1
+tick
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
