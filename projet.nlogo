@@ -165,12 +165,6 @@ to go
   ask turtles with [panic = 1 and dead = false] [A* see-exit check-coll]
   ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll set inner-timer inner-timer - 1]
   ask turtles [check-death damage clear-body escape]
-  ;; the following line is used to make the turtles
-  ;; animate more smoothly.
-  ;;repeat 5 [ ask turtles [ fd 0.2 ] display ]
-  ;; for greater efficiency, at the expense of smooth
-  ;; animation, substitute the following line instead:
-  ;; ask turtles [ fd 1 ]
   tick
 end
 

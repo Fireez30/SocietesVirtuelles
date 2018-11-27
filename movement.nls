@@ -43,43 +43,6 @@ end
 
 ;;turtle movements procedure
 
-;to flock
-;  avoid-obstacles
-;  let a angleFromVect vectDirect
-;  turn-towards a max-angle-turn
-;end
-
-
-;to floc  ;; turtle procedure
-;  find-flockmates
-;  find-obstacles
-;  find-exit
-;
-;  ifelse any? obj
-;  [
-;    let v vectObjObstacle
-;    let a angleFromVect v
-;    let s magnitude v
-;    turn-towards a max-angle-turn
-;  ]
-;  [
-;    ifelse any? flockmates
-;    [let  v  vectDirect
-;      let a angleFromVect v
-;      let s magnitude v
-;      turn-towards a max-angle-turn
-;      let f 0
-;    ]
-;    [ if any? obstacles
-;      [let v vectWithObstacles
-;        let a angleFromVect v
-;        let s magnitude v
-;        turn-towards a max-angle-turn
-;        let f 0
-;      ]
-;    ]
-;  ]
-;end
 
 to flock
   find-flockmates
@@ -96,9 +59,7 @@ to flock
 end
 
 to A*
-  ;find-exit
   find-obstacles
-  ;if any? obstacles [ search ]
   let vr vectObj
   
   let a angleFromVect vr
@@ -118,15 +79,6 @@ to find-nearest-neighbor ;; turtle procedure
 end
 
 
-;to-report vectDirect
-  ;;let va multiplyScalarvect attract-weight vectAttract
-  ;;let vs multiplyScalarvect repuls-weight vectRepuls
-
-  ;;let vr additionvect va vs
-
-  ;report 0
-;end
-
 to-report vectObjObstacle
   let vobj multiplyScalarvect fobj vectObj
   let vobs multiplyScalarvect fobs vectObstacles
@@ -134,18 +86,6 @@ to-report vectObjObstacle
   let vr additionvect vobj vobs
   report vr
 end
-
-;;to-report vectDirect
-;;  let va multiplyScalarvect factor-align vectAlign
- ;; let vs multiplyScalarvect factor-separate vectSeparate
-;;  let vc multiplyScalarvect factor-cohere vectCohere
-;;  let vo multiplyScalarvect factor-obstacles vectObstacles
-
-;;  let vr additionvect va vs
-;;  set vr additionvect vr vc
-;;  set vr additionvect vr vo
-;;  report vr
-;;end
 
 to-report vectDirect
   ifelse any? flockmates[
@@ -172,24 +112,11 @@ end
 
 to-report vectObj
   let vo (list 0 0)
-  ;;déplacé dans find-exit!!!! plus logique en terme de conception
-  ;;if any? obj
-  ;;[let r random 100
-    ;;ifelse r <= objective-choice-chance
-    ;;[
-      ;;let nearest-patch min-one-of obj [distance myself]
-      ;;let d distance nearest-patch
-      ;;set vo VectFromAngle (towards nearest-patch) (1 / d)
-    ;;]
-    ;;[
-      ;;let d distance prefexit
       let d distance last path
       set vo VectFromAngle (towards last path) (1 / d)
     if d < next-patch-range
     [if length path > 1
     [set path remove-item (length path - 1) path]]
-    ;;]
-  ;;]
     report vo
 end
 
@@ -227,7 +154,6 @@ to-report vectAlign
   let x-component (sum [dx] of flockmates) / n
   let y-component (sum [dy] of flockmates) / n
   report (list x-component y-component)
-;  report (list (x-component - dx) (y-component - dy))
 end
 
 to-report vectCohere
@@ -235,20 +161,6 @@ to-report vectCohere
   let y-component mean [cos (towards myself + 180)] of flockmates
   report (list x-component y-component)
 end
-
-;to-report vectRepuls
- ; let vs 0
- ; set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)
- ; report vs
-;end
-
-;to-report vectAttract
-;  let vs 0
-;  set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)
-;  report vs
-;end
-
-
 
 to check-coll
   ifelse (pcolor = red or pcolor = brown)[

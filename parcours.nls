@@ -37,7 +37,6 @@ to search
 end
 
 to search-step
-  ;; let new-nodes generate
   set in-nodes merge-nodes generate in-nodes
 
   set in-nodes sort-nodes in-nodes
