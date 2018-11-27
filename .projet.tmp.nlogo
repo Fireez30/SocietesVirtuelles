@@ -941,7 +941,7 @@ SLIDER
 base-life-1
 base-life-1
 0
-100
+150
 60.0
 1
 1
@@ -987,7 +987,7 @@ base-life-2
 base-life-2
 0
 150
-68.0
+150.0
 1
 1
 NIL
@@ -1001,8 +1001,8 @@ SLIDER
 base-life-3
 base-life-3
 0
-100
-50.0
+150
+100.0
 1
 1
 NIL
@@ -1032,7 +1032,7 @@ base-speed-2
 base-speed-2
 0
 2
-1.0
+1.2
 0.1
 1
 NIL
@@ -1047,7 +1047,7 @@ base-speed-3
 base-speed-3
 0
 2
-1.0
+2.0
 0.1
 1
 NIL
@@ -1062,7 +1062,7 @@ more-panic-proba-2
 more-panic-proba-2
 0
 100
-50.0
+20.0
 1
 1
 NIL
