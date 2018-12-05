@@ -71,7 +71,39 @@ to find-obstacles
 end
 
 to find-flockmates  ;; turtle procedure
-  set flockmates other turtles with  [color != red] in-radius fov-radius
+
+  if personality = true and leader-follower = true
+  [
+    ifelse E- = 0 or role = 0
+    [ set flockmates (list 0 0) ]
+    [
+      ifelse A- = 0 [ set flockmates other turtles with  [color != red] in-radius fov-radius ]   ; sceptical people don't follow leader
+      [set flockmates other turtles with  [color != red and role = 0] in-radius fov-radius]   ; role = 0 -> leader
+    ]
+  ]
+  
+  if personality = true and leader-follower = false
+  [
+    ifelse E- = 0
+    [ set flockmates (list 0 0) ]
+    [
+      set flockmates other turtles with  [color != red] in-radius fov-radius
+    ]
+  ]
+  
+  if personality = false and leader-follower = true
+  [
+    ifelse role = 0
+    [ set flockmates (list 0 0) ]
+    [
+      set flockmates other turtles with  [color != red and role = 0] in-radius fov-radius   ; role = 0 -> leader
+    ]
+  ]
+  
+  if personality = false and leader-follower = false
+  [
+    set flockmates other turtles with  [color != red] in-radius fov-radius
+  ]
 end
 
 to find-nearest-neighbor ;; turtle procedure

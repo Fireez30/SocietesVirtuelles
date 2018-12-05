@@ -12,6 +12,14 @@ turtles-own [
 
   agent-type ;1/2/3
   inner-timer
+
+  O-
+  C-
+  E-
+  A-
+  N-
+
+  role
 ]
 
 patches-own [
@@ -38,6 +46,20 @@ to agent-spawn
       set dead false
       assign-exit
       set panic 0
+
+      if personality = true
+      [
+        set O- random 2
+        set C- random 2
+        set E- random 2
+        set A- random 2
+        set N- random 2
+      ]
+
+      if leader-follower = true
+      [
+        set role random 2 ; role 0 = leader     role 1 = suiveur
+      ]
 
       let r random 100
       ifelse r <= presence-type-1
@@ -165,12 +187,6 @@ to go
   ask turtles with [panic = 1 and dead = false] [A* see-exit check-coll]
   ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll set inner-timer inner-timer - 1]
   ask turtles [check-death damage clear-body escape]
-  ;; the following line is used to make the turtles
-  ;; animate more smoothly.
-  ;;repeat 5 [ ask turtles [ fd 0.2 ] display ]
-  ;; for greater efficiency, at the expense of smooth
-  ;; animation, substitute the following line instead:
-  ;; ask turtles [ fd 1 ]
   tick
 end
 
@@ -191,30 +207,96 @@ end
 to see-exit
   let ex patches in-cone fov-radius fov-angle with [pcolor = yellow]
   if any? ex
-  [ set heading towards one-of ex ]
+  ; [ set heading towards one-of ex ]
+  [
+    let x one-of ex
+    ifelse personality = true
+    [
+      if x != prefexit and O- = 1
+      [ set heading towards x ]
+      if x != prefexit and O- = 0
+      [ set heading towards x + 180 ]
+    ]
+    [ set heading towards one-of ex ]
+  ]
 end
 
 to update-panic
   let others turtles in-cone fov-radius fov-angle with [panic != 0]
   let deads turtles in-cone fov-radius fov-angle with [color = green]
-  if any? others  and panic = 0 [set panic 1]
-  let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
-  if any? fire or any? deads
+
+  ifelse leader-follower = true
   [
-    ifelse panic = 0
+    if any? others and panic = 0
     [
-      set panic 1
-    ]
-    [
-      if panic = 1
+      ifelse role = 0
       [
-        let r random 100
-        if r <= panic-proba
+        set panic 1
+      ]
+      [ set panic 2]
+    ]
+    let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
+    if any? fire or any? deads
+    [
+      ifelse role = 0
+      [
+        set panic 1
+      ]
+      [ set panic 2]
+    ]
+  ]
+  [
+    if any? others and panic = 0
+    [
+      let r random 100
+      ifelse personality = true
+      [
+        if r <= panic-propagation or N- = 1
         [
-          set panic 2
-          if agent-type = 1 [ set speed speed + sprint-1 ]
-          if agent-type = 2 [ set speed speed + sprint-2 ]
-          if agent-type = 3 [ set speed speed + sprint-3 ]
+          set panic 1
+        ]
+      ]
+      [
+        if r <= panic-propagation
+        [
+          set panic 1
+        ]
+      ]
+    ]
+    let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
+    if any? fire or any? deads
+    [
+      ifelse panic = 0
+      [
+        set panic 1
+      ]
+      [
+        ifelse personality = true
+        [
+          if panic = 1 and N- = 1
+          [
+            let r random 100
+            if r <= panic-proba
+            [
+              set panic 2
+              if agent-type = 1 [ set speed speed + sprint-1 ]
+              if agent-type = 2 [ set speed speed + sprint-2 ]
+              if agent-type = 3 [ set speed speed + sprint-3 ]
+            ]
+          ]
+        ]
+        [
+          if panic = 1
+          [
+            let r random 100
+            if r <= panic-proba
+            [
+              set panic 2
+              if agent-type = 1 [ set speed speed + sprint-1 ]
+              if agent-type = 2 [ set speed speed + sprint-2 ]
+              if agent-type = 3 [ set speed speed + sprint-3 ]
+            ]
+          ]
         ]
       ]
     ]
@@ -236,7 +318,11 @@ end
 
 
 to panic-all
-  ask turtles [set panic 1]
+  ifelse leader-follower = true
+  [
+    ask turtles [set panic role + 1]
+  ]
+  [ ask turtles [set panic 1] ]
 end
 
 
@@ -442,10 +528,10 @@ NIL
 1
 
 MONITOR
-1481
-42
-1602
-87
+1340
+41
+1461
+86
 Number of collisions
 collisions
 17
@@ -453,10 +539,10 @@ collisions
 11
 
 TEXTBOX
-1512
-14
-1662
-32
+1371
+13
+1521
+31
 Display
 14
 0.0
@@ -632,10 +718,10 @@ NIL
 1
 
 MONITOR
-1485
-159
-1544
-204
+1344
+158
+1403
+203
 NIL
 escaped
 17
@@ -801,10 +887,10 @@ PENS
 "Total" 1.0 0 -16777216 true "" "plot count turtles"
 
 MONITOR
-1485
-110
-1542
-155
+1344
+109
+1401
+154
 agents
 count turtles
 17
@@ -812,21 +898,11 @@ count turtles
 11
 
 TEXTBOX
-1205
-10
-1355
-28
-Panic
-14
-0.0
-1
-
-TEXTBOX
 979
 285
 1129
 303
-Type 1 (vieu)
+Type 1 (vieux)
 14
 0.0
 1
@@ -836,7 +912,7 @@ TEXTBOX
 286
 1316
 304
-Type 2
+Type 2 (adulte)
 14
 0.0
 1
@@ -846,7 +922,7 @@ TEXTBOX
 287
 1503
 305
-Type 3
+Type 3 (enfant)
 14
 0.0
 1
@@ -890,7 +966,7 @@ more-panic-proba-1
 more-panic-proba-1
 0
 100
-80.0
+77.0
 1
 1
 NIL
@@ -920,7 +996,7 @@ base-life-3
 base-life-3
 0
 150
-100.0
+90.0
 1
 1
 NIL
@@ -1032,10 +1108,10 @@ NIL
 HORIZONTAL
 
 PLOT
-925
-566
-1458
-716
+1472
+15
+2220
+668
 Agent Type Population
 temps
 agent
@@ -1093,7 +1169,7 @@ sprint-3
 sprint-3
 0
 1
-0.5
+1.0
 0.1
 1
 NIL
@@ -1143,6 +1219,63 @@ panic-timer-3
 1
 tick
 HORIZONTAL
+
+SLIDER
+1155
+35
+1327
+68
+panic-propagation
+panic-propagation
+0
+100
+20.0
+1
+1
+NIL
+HORIZONTAL
+
+TEXTBOX
+1222
+10
+1372
+28
+Panic
+14
+0.0
+1
+
+TEXTBOX
+927
+568
+1094
+641
+O -> Openness to experience\nC -> Conscientiousness\nE -> Extraversion\nA -> Agreeableness\nN -> Neuroticism\n
+11
+0.0
+1
+
+SWITCH
+1245
+583
+1385
+617
+leader-follower
+leader-follower
+0
+1
+-1000
+
+SWITCH
+1112
+583
+1234
+617
+personality
+personality
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
