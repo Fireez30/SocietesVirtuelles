@@ -75,34 +75,34 @@ to find-flockmates  ;; turtle procedure
   if personality = true and leader-follower = true
   [
     ifelse E- = 0 or role = 0
-    [ set flockmates (list 0 0) ]
+    [ set flockmates other turtles with  [color = pink ] in-cone fov-radius fov-angle ]
     [
-      ifelse A- = 0 [ set flockmates other turtles with  [color != red] in-radius fov-radius ]   ; sceptical people don't follow leader
-      [set flockmates other turtles with  [color != red and role = 0] in-radius fov-radius]   ; role = 0 -> leader
+      ifelse A- = 0 [ set flockmates other turtles with  [color != red] in-cone fov-radius fov-angle ]   ; sceptical people don't follow leader
+      [set flockmates other turtles with  [color != red and role = 0] in-cone fov-radius fov-angle]   ; role = 0 -> leader
     ]
   ]
   
   if personality = true and leader-follower = false
   [
     ifelse E- = 0
-    [ set flockmates (list 0 0) ]
+    [ set flockmates other turtles with  [color = pink] in-cone fov-radius fov-angle ]
     [
-      set flockmates other turtles with  [color != red] in-radius fov-radius
+      set flockmates other turtles with  [color != red] in-cone fov-radius fov-angle
     ]
   ]
   
   if personality = false and leader-follower = true
   [
     ifelse role = 0
-    [ set flockmates (list 0 0) ]
+    [ set flockmates other turtles with  [color = pink] in-cone fov-radius fov-angle ]
     [
-      set flockmates other turtles with  [color != red and role = 0] in-radius fov-radius   ; role = 0 -> leader
+      set flockmates other turtles with  [color != red and role = 0] in-cone fov-radius fov-angle   ; role = 0 -> leader
     ]
   ]
   
   if personality = false and leader-follower = false
   [
-    set flockmates other turtles with  [color != red] in-radius fov-radius
+    set flockmates other turtles with  [color != red] in-cone fov-radius fov-angle
   ]
 end
 

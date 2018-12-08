@@ -1,6 +1,6 @@
 __includes ["parcours.nls" "vector.nls" "movement.nls"]
 
-globals [collisions escaped escaped-1 escaped-2 escaped-3]
+globals [collisions escaped escaped-1 escaped-2 escaped-3 pop-tot-1 pop-tot-2 pop-tot-3 the-end]
 
 turtles-own [
   dead
@@ -36,9 +36,16 @@ to start-fire
   reset-ticks
 end
 
-to agent-spawn
+to set-var
+  set pop-tot-1 0
+  set pop-tot-2 0
+  set pop-tot-3 0
   set collisions 0
   set escaped 0
+  set the-end false
+end
+
+to agent-spawn
   crt agent-number
     [set color blue - 2 + random 7  ;; random shades look nice
       set size 1 ;; easier to see]
@@ -69,6 +76,7 @@ to agent-spawn
         set speed base-speed-1
         set panic-proba more-panic-proba-1
         set inner-timer panic-timer-1
+        set pop-tot-1 pop-tot-1 + 1
       ]
       [
         ifelse r > presence-type-1 and r <= presence-type-1 + presence-type-2
@@ -78,13 +86,15 @@ to agent-spawn
           set speed base-speed-2
           set panic-proba more-panic-proba-2
           set inner-timer panic-timer-2
+          set pop-tot-2 pop-tot-2 + 1
         ]
-        [; -> if r > presence-type-1 + presence-type-2
+        [
           set agent-type 3
           set hp base-life-3
           set speed base-speed-3
           set panic-proba more-panic-proba-3
           set inner-timer panic-timer-3
+          set pop-tot-3 pop-tot-3 + 1
         ]
 
       ]
@@ -106,6 +116,10 @@ to agent-spawn
   reset-ticks
 end
 
+to check-end
+  if count turtles = 0
+  [ set the-end true ]
+end
 
 to make-exit
   if mouse-down?
@@ -187,6 +201,9 @@ to go
   ask turtles with [panic = 1 and dead = false] [A* see-exit check-coll]
   ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll set inner-timer inner-timer - 1]
   ask turtles [check-death damage clear-body escape]
+  check-end
+  if the-end = true
+  [ stop ]
   tick
 end
 
@@ -472,7 +489,7 @@ agent-number
 agent-number
 0
 100
-10.0
+100.0
 1
 1
 NIL
@@ -1123,9 +1140,9 @@ true
 true
 "" ""
 PENS
-"Type 1" 1.0 0 -5825686 true "" "plot count turtles with [agent-type = 1]"
-"Type 2" 1.0 0 -11221820 true "" "plot count turtles with [agent-type = 2]"
-"Type 3" 1.0 0 -2674135 true "" "plot count turtles with [agent-type = 3]"
+"Type 1" 1.0 0 -5825686 true "" "plot (count turtles with [agent-type = 1] * 100) / (pop-tot-1 + 1)"
+"Type 2" 1.0 0 -11221820 true "" "plot (count turtles with [agent-type = 2] * 100) / (pop-tot-2 + 1)"
+"Type 3" 1.0 0 -2674135 true "" "plot (count turtles with [agent-type = 3] * 100) / (pop-tot-3 + 1)"
 "Escaped type 1" 1.0 0 -8630108 true "" "plot escaped-1"
 "Escaped type 2" 1.0 0 -13345367 true "" "plot escaped-2"
 "Escaped type 3" 1.0 0 -955883 true "" "plot escaped-3"
@@ -1259,10 +1276,10 @@ SWITCH
 1245
 583
 1385
-617
+616
 leader-follower
 leader-follower
-0
+1
 1
 -1000
 
@@ -1270,12 +1287,29 @@ SWITCH
 1112
 583
 1234
-617
+616
 personality
 personality
 1
 1
 -1000
+
+BUTTON
+3
+668
+75
+701
+NIL
+set-var
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
