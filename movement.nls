@@ -48,10 +48,10 @@ to flock
   find-flockmates
   find-obstacles
  ; find-exit
-
-  let v vectObstacles ;vectObjObstacles
+  
+  let v multiplyScalarvect fobs vectObstacles
   let v2 vectDirect
-
+  
   let vr additionvect v v2
 
   let a angleFromVect vr
@@ -60,9 +60,13 @@ end
 
 to A*
   find-obstacles
-  let vr vectObj
   
-  let a angleFromVect vr
+  let vr multiplyScalarvect fobj vectObj
+  let vs multiplyScalarvect fobs vectObstacles
+  
+  let v additionvect vr vs
+  
+  let a angleFromVect v
   turn-towards a max-angle-turn  
 end
 
@@ -137,6 +141,7 @@ to-report vectOb
   if any? obj [
     let nearest-patch min-one-of obj [distance myself]
     let d distance nearest-patch
+    if (d = 0) [set d 0.1]
     set vo VectFromAngle (towards nearest-patch) (1 / d)
   ]
   report vo

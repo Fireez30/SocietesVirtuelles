@@ -1,6 +1,6 @@
 __includes ["parcours.nls" "vector.nls" "movement.nls"]
 
-globals [collisions escaped escaped-1 escaped-2 escaped-3 pop-tot-1 pop-tot-2 pop-tot-3 the-end]
+globals [collisions escaped escaped-1 escaped-2 escaped-3 pop-tot-1 pop-tot-2 pop-tot-3 the-end escapedp1 escapedp2]
 
 turtles-own [
   dead
@@ -66,6 +66,7 @@ to agent-spawn
       if leader-follower = true
       [
         set role random 2 ; role 0 = leader     role 1 = suiveur
+        ifelse role = 0 [set color blue] [set color white]
       ]
 
       let r random 100
@@ -189,6 +190,8 @@ to escape
     if agent-type = 2 [set escaped-2 escaped-2 + 1]
     if agent-type = 3 [set escaped-3 escaped-3 + 1]
 
+    if panic = 1 [set escapedp1 escapedp1 + 1]
+    if panic = 2 [set escapedp2 escapedp1 + 2]
     die
   ]
 end
@@ -207,6 +210,15 @@ to go
   tick
 end
 
+to change-exit-if-fire
+  let dangers patches in-cone fov-radius fov-angle with [pcolor = grey or pcolor = red]
+  if any? dangers [
+  let ex one-of patches with [exit = true]
+  let r random 100
+    if (r < objective-choice-chance)
+    [set prefexit ex search]
+  ]
+end
 
 
 to find-exit
@@ -231,11 +243,13 @@ to see-exit
     [
       if x != prefexit and O- = 1
       [ set heading towards x ]
-      if x != prefexit and O- = 0
-      [ set heading towards x + 180 ]
     ]
-    [ set heading towards one-of ex ]
-  ]
+    [
+      let r random 100
+      if (r < objective-choice-chance)
+      [ set heading towards x ]
+    ]
+   ]
 end
 
 to update-panic
@@ -369,8 +383,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -16
 16
@@ -489,7 +503,7 @@ agent-number
 agent-number
 0
 100
-100.0
+39.0
 1
 1
 NIL
@@ -574,7 +588,7 @@ max-angle-turn
 max-angle-turn
 0
 360
-30.0
+122.0
 1
 1
 NIL
@@ -799,7 +813,7 @@ objective-choice-chance
 objective-choice-chance
 0
 100
-10.0
+61.0
 1
 1
 NIL
@@ -915,31 +929,31 @@ count turtles
 11
 
 TEXTBOX
-979
+976
+283
+1126
+301
+Type 1 (faible)
+14
+0.0
+1
+
+TEXTBOX
+1128
+283
+1278
+301
+Type 2 (+ de vie)
+14
+0.0
+1
+
+TEXTBOX
+1306
 285
-1129
+1456
 303
-Type 1 (vieux)
-14
-0.0
-1
-
-TEXTBOX
-1166
-286
-1316
-304
-Type 2 (adulte)
-14
-0.0
-1
-
-TEXTBOX
-1353
-287
-1503
-305
-Type 3 (enfant)
+Type 3 (+ de vitesse)
 14
 0.0
 1
@@ -1127,8 +1141,8 @@ HORIZONTAL
 PLOT
 1472
 15
-2220
-668
+2095
+414
 Agent Type Population
 temps
 agent
@@ -1279,7 +1293,7 @@ SWITCH
 616
 leader-follower
 leader-follower
-1
+0
 1
 -1000
 
@@ -1290,7 +1304,7 @@ SWITCH
 616
 personality
 personality
-1
+0
 1
 -1000
 
@@ -1310,6 +1324,25 @@ NIL
 NIL
 NIL
 1
+
+PLOT
+1475
+431
+1675
+581
+Escaped 
+time
+number
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -1184463 true "" "plot escapedp1"
+"pen-1" 1.0 0 -955883 true "" "plot escapedp2"
 
 @#$#@#$#@
 ## WHAT IS IT?

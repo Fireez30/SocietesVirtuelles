@@ -144,7 +144,7 @@ end
 to draw-path [node]
   while [node != []] [
     set path lput get-patch node path
-    ;ask get-patch node [set pcolor green]
+    ;;ask get-patch node [set pcolor green]
     set node get-parent node
   ]
 end
