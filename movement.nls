@@ -200,7 +200,7 @@ end
 
 to check-coll
   foreach (list speed)
-  [ x -> print( x )
+  [ x ->
     let pas x / 5
     let liste (list pas pas pas pas pas)
     foreach liste

@@ -375,8 +375,8 @@ to color-panic
   ]
   if color-ocean-a = true
   [
-    if A- = 0 [set color white]
-    if A- = 1 [set color blue]
+    if role = 0 [set color white]
+    if role = 1 [set color blue]
   ]
     if color-using-panic = true
   [
@@ -541,7 +541,7 @@ agent-number
 agent-number
 0
 100
-31.0
+27.0
 1
 1
 NIL
@@ -1331,7 +1331,7 @@ SWITCH
 649
 leader-follower
 leader-follower
-1
+0
 1
 -1000
 
@@ -1400,7 +1400,7 @@ SWITCH
 615
 color-using-panic
 color-using-panic
-0
+1
 1
 -1000
 
@@ -1411,7 +1411,7 @@ SWITCH
 655
 color-ocean-o
 color-ocean-o
-1
+0
 1
 -1000
 
@@ -1422,7 +1422,7 @@ SWITCH
 691
 color-ocean-n
 color-ocean-n
-1
+0
 1
 -1000
 
@@ -1433,7 +1433,7 @@ SWITCH
 654
 color-ocean-e
 color-ocean-e
-1
+0
 1
 -1000
 
@@ -1444,7 +1444,7 @@ SWITCH
 690
 color-ocean-a
 color-ocean-a
-1
+0
 1
 -1000
 
