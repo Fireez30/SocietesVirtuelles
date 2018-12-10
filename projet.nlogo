@@ -357,30 +357,31 @@ to color-panic
     if agent-type = 1 [set color cyan]
     if agent-type = 2 [set color orange]
   ]
-  if color-using-panic = true
-  [
-    if panic = 1 [set color yellow]
-    if panic = 2 [set color orange]
-  ]
+
   if color-ocean-o = true
   [
     if O- = 0 [set color white]
-    if O- = 1 [set color grey]
+    if O- = 1 [set color blue]
   ]
   if color-ocean-n = true
   [
     if N- = 0 [set color white]
-    if N- = 1 [set color grey]
+    if N- = 1 [set color blue]
   ]
   if color-ocean-e = true
   [
     if E- = 0 [set color white]
-    if E- = 1 [set color grey]
+    if E- = 1 [set color blue]
   ]
   if color-ocean-a = true
   [
     if A- = 0 [set color white]
-    if A- = 1 [set color grey]
+    if A- = 1 [set color blue]
+  ]
+    if color-using-panic = true
+  [
+    if panic = 1 [set color yellow]
+    if panic = 2 [set color orange]
   ]
 end
 
@@ -1330,7 +1331,7 @@ SWITCH
 649
 leader-follower
 leader-follower
-0
+1
 1
 -1000
 
