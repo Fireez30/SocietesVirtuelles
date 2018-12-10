@@ -59,11 +59,11 @@ to A*
   find-obstacles
   
   let vr multiplyScalarvect fobj vectObj
-  let vs multiplyScalarvect fobs vectObstacles
+  ;let vs multiplyScalarvect fobs vectObstacles
   
-  let v additionvect vr vs
+  ;let v additionvect vr vs
   
-  let a angleFromVect v
+  let a angleFromVect vr;v
   turn-towards a max-angle-turn  
 end
 
