@@ -159,7 +159,7 @@ to update-color
 end
 
 to damage
-  if pcolor = grey
+  if pcolor = gray
   [ set hp hp - smoke-damage ]
   if pcolor = red
   [ set hp hp - fire-damage ]
@@ -300,7 +300,7 @@ to update-panic
         ]
       ]
     ]
-    let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
+    let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = gray]
     if any? fire or any? deads
     [
       ifelse panic = 0

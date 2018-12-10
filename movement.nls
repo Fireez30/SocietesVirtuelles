@@ -68,7 +68,7 @@ to A*
 end
 
 to find-obstacles
-  set obstacles patches in-cone fov-radius fov-angle with [pcolor = brown or pcolor = red ];or pcolor = grey]
+  set obstacles patches in-cone fov-radius fov-angle with [pcolor = brown or pcolor = red ];or pcolor = gray]
 end
 
 to find-flockmates  ;; turtle procedure
