@@ -199,13 +199,15 @@ to-report vectCohere
 end
 
 to check-coll
-  ifelse (pcolor = red or pcolor = brown)[
-    bk speed
-    rt random 20
-    lt random 20
-  ]
+  foreach (list speed)
   [
-    fd speed
+    fd 1
+    if (pcolor = red or pcolor = brown)[
+      rt 120
+      fd 1
+      rt random 20
+      lt random 20
+    ]
   ]
 end
 
