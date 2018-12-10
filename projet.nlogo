@@ -211,7 +211,7 @@ to go
 end
 
 to change-exit-if-fire
-  let dangers patches in-cone fov-radius fov-angle with [pcolor = grey or pcolor = red]
+  let dangers patches in-cone fov-radius fov-angle with [pcolor = gray or pcolor = red]
   if any? dangers [
   let ex one-of patches with [exit = true]
   let r random 100
@@ -222,7 +222,7 @@ end
 
 
 to find-exit
- set obj patches in-cone fov-radius fov-angle with [pcolor = yellow]
+ set obj patches in-cone fov-radius fov-angle with [exit = true]
  if any? obj
   [let x one-of obj ;;pour chaque sortie visible
   if x != prefexit ;;si la sortie n'est pas celle que l'agent connaissait
@@ -234,7 +234,7 @@ to find-exit
 end
 
 to see-exit
-  let ex patches in-cone fov-radius fov-angle with [pcolor = yellow]
+  let ex patches in-cone fov-radius fov-angle with [exit = true]
   if any? ex
   ; [ set heading towards one-of ex ]
   [
@@ -268,7 +268,7 @@ to update-panic
       [ set panic 2
       set totalp2 totalp2 + 1]
     ]
-    let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
+    let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = gray]
     if any? fire or any? deads
     [
       ifelse role = 0
@@ -472,10 +472,10 @@ NIL
 1
 
 BUTTON
-3
-625
-114
-658
+219
+623
+330
+656
 Spawn Agents
 agent-spawn
 NIL
@@ -523,10 +523,10 @@ NIL
 1
 
 TEXTBOX
-10
-592
-160
-610
+20
+593
+170
+611
 Simulation configuration
 14
 0.0
@@ -580,10 +580,10 @@ NIL
 HORIZONTAL
 
 BUTTON
+1
+624
 119
-625
-237
-658
+657
 Draw Obstacles
 make-obstacles
 T
@@ -658,7 +658,7 @@ factor-align
 factor-align
 0
 1
-0.1
+0.4
 0.1
 1
 NIL
@@ -688,7 +688,7 @@ factor-cohere
 factor-cohere
 0
 1
-0.1
+0.4
 0.1
 1
 NIL
@@ -703,7 +703,7 @@ factor-obstacles
 factor-obstacles
 0
 1
-1.0
+0.8
 0.1
 1
 NIL
@@ -770,10 +770,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-243
-625
-328
-658
+125
+624
+210
+657
 Draw Exit
 make-exit
 T
@@ -806,7 +806,7 @@ fov-angle
 fov-angle
 0
 360
-120.0
+87.0
 1
 1
 NIL
@@ -821,7 +821,7 @@ fov-radius
 fov-radius
 0
 10
-6.0
+3.0
 1
 1
 patches
@@ -836,7 +836,7 @@ factor-obj
 factor-obj
 0
 1
-1.0
+0.8
 0.1
 1
 NIL
@@ -1331,7 +1331,7 @@ SWITCH
 649
 leader-follower
 leader-follower
-1
+0
 1
 -1000
 
@@ -1379,7 +1379,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -1184463 true "" "plot escapedp1"
+"default" 1.0 0 -16777216 true "" "plot escapedp1"
 "pen-1" 1.0 0 -955883 true "" "plot escapedp2"
 
 SWITCH
@@ -1400,7 +1400,7 @@ SWITCH
 615
 color-using-panic
 color-using-panic
-1
+0
 1
 -1000
 

@@ -49,12 +49,9 @@ to flock
   find-obstacles
  ; find-exit
   
-  let v multiplyScalarvect fobs vectObstacles
   let v2 vectDirect
   
-  let vr additionvect v v2
-
-  let a angleFromVect vr
+  let a angleFromVect v2
   turn-towards a max-angle-turn
 end
 
@@ -128,9 +125,11 @@ to-report vectDirect
   let va multiplyScalarvect falign vectAlign
   let vs multiplyScalarvect fseparate vectSeparate
   let vc multiplyScalarvect fcohere vectCohere
-
+  let vo multiplyScalarvect fobs vectObstacles
+    
   let vr additionvect va vs
-  set vr additionvect vr vc
+  let vz additionvect vo vc
+  set vr additionvect vr vz
   report vr]
   [report (list 0 0)]
 end
