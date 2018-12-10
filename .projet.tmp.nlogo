@@ -201,7 +201,7 @@ to go
   ask patches with [onFire = true] [update-color spread-fire]
   ask patches with [onSmoke = true] [update-color spread-smoke]
   ask turtles with [dead = false] [update-panic color-panic damage count-collisions]
-  ask turtles with [panic = 1 and dead = false] [A* check-coll];see-exit check-coll]
+  ask turtles with [panic = 1 and dead = false] [A* c];see-exit check-coll]
   ask turtles with [panic = 2 and dead = false] [flock see-exit check-coll set inner-timer inner-timer - 1]
   ask turtles [check-death damage clear-body escape]
   check-end
