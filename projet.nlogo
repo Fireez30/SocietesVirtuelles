@@ -1,6 +1,6 @@
 __includes ["parcours.nls" "vector.nls" "movement.nls"]
 
-globals [collisions escaped escaped-1 escaped-2 escaped-3 pop-tot-1 pop-tot-2 pop-tot-3 the-end escapedp1 escapedp2]
+globals [collisions escaped escaped-1 escaped-2 escaped-3 pop-tot-1 pop-tot-2 pop-tot-3 the-end escapedp1 escapedp2 totalp1 totalp2]
 
 turtles-own [
   dead
@@ -263,8 +263,10 @@ to update-panic
       ifelse role = 0
       [
         set panic 1
+        set totalp1 totalp1 + 1
       ]
-      [ set panic 2]
+      [ set panic 2
+      set totalp2 totalp2 + 1]
     ]
     let fire patches in-cone fov-radius fov-angle with [pcolor = red or pcolor = grey]
     if any? fire or any? deads
@@ -272,8 +274,10 @@ to update-panic
       ifelse role = 0
       [
         set panic 1
+        set totalp1 totalp1 + 1
       ]
-      [ set panic 2]
+      [ set panic 2
+      set totalp2 totalp2 + 1]
     ]
   ]
   [
@@ -285,12 +289,14 @@ to update-panic
         if r <= panic-propagation or N- = 1
         [
           set panic 1
+          set totalp1 totalp1 + 1
         ]
       ]
       [
         if r <= panic-propagation
         [
           set panic 1
+          set totalp1 totalp1 + 1
         ]
       ]
     ]
@@ -300,6 +306,7 @@ to update-panic
       ifelse panic = 0
       [
         set panic 1
+        set totalp1 totalp1 + 1
       ]
       [
         ifelse personality = true
@@ -323,6 +330,7 @@ to update-panic
             if r <= panic-proba
             [
               set panic 2
+              set totalp2 totalp2 + 1
               if agent-type = 1 [ set speed speed + sprint-1 ]
               if agent-type = 2 [ set speed speed + sprint-2 ]
               if agent-type = 3 [ set speed speed + sprint-3 ]
@@ -343,8 +351,37 @@ to update-panic
 end
 
 to color-panic
-  if panic = 1 [set color yellow]
-  if panic = 2 [set color orange]
+  if color-personality = true
+  [
+    if agent-type = 0 [set color red]
+    if agent-type = 1 [set color cyan]
+    if agent-type = 2 [set color orange]
+  ]
+  if color-using-panic = true
+  [
+    if panic = 1 [set color yellow]
+    if panic = 2 [set color orange]
+  ]
+  if color-ocean-o = true
+  [
+    if O- = 0 [set color white]
+    if O- = 1 [set color grey]
+  ]
+  if color-ocean-n = true
+  [
+    if N- = 0 [set color white]
+    if N- = 1 [set color grey]
+  ]
+  if color-ocean-e = true
+  [
+    if E- = 0 [set color white]
+    if E- = 1 [set color grey]
+  ]
+  if color-ocean-a = true
+  [
+    if A- = 0 [set color white]
+    if A- = 1 [set color grey]
+  ]
 end
 
 
@@ -397,20 +434,20 @@ ticks
 30.0
 
 TEXTBOX
-615
-10
-775
-28
+1270
+43
+1430
+61
 Agent parameters
 14
 0.0
 1
 
 TEXTBOX
-795
-10
-945
-28
+1450
+43
+1600
+61
 Movement ponderation
 14
 0.0
@@ -495,15 +532,15 @@ Simulation configuration
 1
 
 SLIDER
-971
-111
-1143
+1626
 144
+1798
+177
 agent-number
 agent-number
 0
 100
-39.0
+31.0
 1
 1
 NIL
@@ -527,10 +564,10 @@ NIL
 1
 
 SLIDER
-586
-35
-758
+1241
 68
+1413
+101
 min-dist
 min-dist
 0
@@ -559,10 +596,10 @@ NIL
 1
 
 MONITOR
-1340
-41
-1461
-86
+1995
+74
+2116
+119
 Number of collisions
 collisions
 17
@@ -570,20 +607,20 @@ collisions
 11
 
 TEXTBOX
-1371
-13
-1521
-31
+2026
+46
+2176
+64
 Display
 14
 0.0
 1
 
 SLIDER
-587
-74
-759
+1242
 107
+1414
+140
 max-angle-turn
 max-angle-turn
 0
@@ -612,10 +649,10 @@ NIL
 1
 
 SLIDER
-778
-78
-950
+1433
 111
+1605
+144
 factor-align
 factor-align
 0
@@ -627,10 +664,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-778
-34
-950
+1433
 67
+1605
+100
 factor-separate
 factor-separate
 0
@@ -642,10 +679,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-777
-125
-949
+1432
 158
+1604
+191
 factor-cohere
 factor-cohere
 0
@@ -657,10 +694,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-778
-168
-950
+1433
 201
+1605
+234
 factor-obstacles
 factor-obstacles
 0
@@ -672,10 +709,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-972
-148
-1144
+1627
 181
+1799
+214
 fire-proba
 fire-proba
 0
@@ -687,10 +724,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-971
-184
-1143
+1626
 217
+1798
+250
 smoke-proba
 smoke-proba
 0
@@ -702,10 +739,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-972
-35
-1144
+1627
 68
+1799
+101
 smoke-damage
 smoke-damage
 0
@@ -717,10 +754,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-972
-72
-1144
+1627
 105
+1799
+138
 fire-damage
 fire-damage
 0
@@ -749,10 +786,10 @@ NIL
 1
 
 MONITOR
-1344
-158
-1403
-203
+1997
+181
+2056
+226
 NIL
 escaped
 17
@@ -760,10 +797,10 @@ escaped
 11
 
 SLIDER
-584
-393
-756
+1239
 426
+1411
+459
 fov-angle
 fov-angle
 0
@@ -775,10 +812,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-584
-432
-756
+1239
 465
+1411
+498
 fov-radius
 fov-radius
 0
@@ -790,10 +827,10 @@ patches
 HORIZONTAL
 
 SLIDER
-778
-211
-950
+1433
 244
+1605
+277
 factor-obj
 factor-obj
 0
@@ -805,10 +842,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-586
-117
-770
+1241
 150
+1425
+183
 objective-choice-chance
 objective-choice-chance
 0
@@ -854,10 +891,10 @@ NIL
 1
 
 SLIDER
-585
-159
-757
+1240
 192
+1412
+225
 next-patch-range
 next-patch-range
 0
@@ -869,40 +906,40 @@ NIL
 HORIZONTAL
 
 TEXTBOX
-985
-10
-1173
-34
+1640
+43
+1828
+67
 Environment parameters
 14
 0.0
 1
 
 TEXTBOX
-597
-374
-747
-392
+1252
+407
+1402
+425
 Vision
 14
 0.0
 1
 
 TEXTBOX
-588
-255
-944
-326
+1243
+288
+1599
+359
 IMPORTANT! \nYou must setup walls, exit and agents before computing A* algorithm !\nStart the fire just before to start simulation !
 14
 0.0
 1
 
 PLOT
-602
-510
-893
-660
+593
+656
+884
+806
 Population
 temps
 Agent
@@ -918,10 +955,10 @@ PENS
 "Total" 1.0 0 -16777216 true "" "plot count turtles"
 
 MONITOR
-1344
-109
-1401
-154
+1997
+132
+2054
+177
 agents
 count turtles
 17
@@ -929,40 +966,40 @@ count turtles
 11
 
 TEXTBOX
-976
-283
-1126
-301
+1631
+316
+1781
+334
 Type 1 (faible)
 14
 0.0
 1
 
 TEXTBOX
-1128
-283
-1278
-301
+1783
+316
+1933
+334
 Type 2 (+ de vie)
 14
 0.0
 1
 
 TEXTBOX
-1306
-285
-1456
-303
+1961
+318
+2111
+336
 Type 3 (+ de vitesse)
 14
 0.0
 1
 
 SLIDER
-924
-317
-1096
+1579
 350
+1751
+383
 base-life-1
 base-life-1
 0
@@ -974,10 +1011,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-924
-361
-1096
+1579
 394
+1751
+427
 base-speed-1
 base-speed-1
 0
@@ -989,10 +1026,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-924
-402
-1096
+1579
 435
+1751
+468
 more-panic-proba-1
 more-panic-proba-1
 0
@@ -1004,10 +1041,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1104
-316
-1276
+1759
 349
+1931
+382
 base-life-2
 base-life-2
 0
@@ -1019,10 +1056,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1287
-316
-1459
+1942
 349
+2114
+382
 base-life-3
 base-life-3
 0
@@ -1034,10 +1071,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-924
-440
-1096
+1579
 473
+1751
+506
 presence-type-1
 presence-type-1
 0
@@ -1049,10 +1086,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1105
-361
-1277
+1760
 394
+1932
+427
 base-speed-2
 base-speed-2
 0
@@ -1064,10 +1101,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1287
-361
-1459
+1942
 394
+2114
+427
 base-speed-3
 base-speed-3
 0
@@ -1079,10 +1116,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1104
-402
-1276
+1759
 435
+1931
+468
 more-panic-proba-2
 more-panic-proba-2
 0
@@ -1094,10 +1131,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1289
-402
-1461
+1944
 435
+2116
+468
 more-panic-proba-3
 more-panic-proba-3
 0
@@ -1109,10 +1146,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1104
-440
-1276
+1759
 473
+1931
+506
 presence-type-2
 presence-type-2
 0
@@ -1124,10 +1161,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1288
-439
-1460
+1943
 472
+2115
+505
 presence-type-3
 presence-type-3
 0
@@ -1139,10 +1176,10 @@ NIL
 HORIZONTAL
 
 PLOT
-1472
-15
-2095
-414
+586
+10
+1209
+409
 Agent Type Population
 temps
 agent
@@ -1162,10 +1199,10 @@ PENS
 "Escaped type 3" 1.0 0 -955883 true "" "plot escaped-3"
 
 SLIDER
-924
-481
-1096
+1579
 514
+1751
+547
 sprint-1
 sprint-1
 0
@@ -1177,10 +1214,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1104
-481
-1276
+1759
 514
+1931
+547
 sprint-2
 sprint-2
 0
@@ -1192,10 +1229,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1288
-481
-1460
+1943
 514
+2115
+547
 sprint-3
 sprint-3
 0
@@ -1207,10 +1244,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-925
-519
-1097
+1580
 552
+1752
+585
 panic-timer-1
 panic-timer-1
 0
@@ -1222,10 +1259,10 @@ tick
 HORIZONTAL
 
 SLIDER
-1104
-520
-1276
+1759
 553
+1931
+586
 panic-timer-2
 panic-timer-2
 0
@@ -1237,10 +1274,10 @@ tick
 HORIZONTAL
 
 SLIDER
-1289
-520
-1461
+1944
 553
+2116
+586
 panic-timer-3
 panic-timer-3
 0
@@ -1252,10 +1289,10 @@ tick
 HORIZONTAL
 
 SLIDER
-1155
-35
-1327
+1810
 68
+1982
+101
 panic-propagation
 panic-propagation
 0
@@ -1267,30 +1304,30 @@ NIL
 HORIZONTAL
 
 TEXTBOX
-1222
-10
-1372
-28
+1877
+43
+2027
+61
 Panic
 14
 0.0
 1
 
 TEXTBOX
-927
-568
-1094
-641
+1582
+601
+1749
+674
 O -> Openness to experience\nC -> Conscientiousness\nE -> Extraversion\nA -> Agreeableness\nN -> Neuroticism\n
 11
 0.0
 1
 
 SWITCH
-1245
-583
-1385
+1900
 616
+2040
+649
 leader-follower
 leader-follower
 0
@@ -1298,10 +1335,10 @@ leader-follower
 -1000
 
 SWITCH
-1112
-583
-1234
+1767
 616
+1889
+649
 personality
 personality
 0
@@ -1326,23 +1363,89 @@ NIL
 1
 
 PLOT
-1475
-431
-1675
-581
+586
+413
+1191
+646
 Escaped 
 time
 number
 0.0
 10.0
 0.0
-10.0
+100.0
 true
 false
 "" ""
 PENS
 "default" 1.0 0 -1184463 true "" "plot escapedp1"
 "pen-1" 1.0 0 -955883 true "" "plot escapedp2"
+
+SWITCH
+1215
+546
+1363
+579
+color-personality
+color-personality
+1
+1
+-1000
+
+SWITCH
+1214
+582
+1363
+615
+color-using-panic
+color-using-panic
+1
+1
+-1000
+
+SWITCH
+1216
+622
+1348
+655
+color-ocean-o
+color-ocean-o
+0
+1
+-1000
+
+SWITCH
+1215
+658
+1347
+691
+color-ocean-n
+color-ocean-n
+1
+1
+-1000
+
+SWITCH
+1345
+621
+1477
+654
+color-ocean-e
+color-ocean-e
+1
+1
+-1000
+
+SWITCH
+1342
+657
+1474
+690
+color-ocean-a
+color-ocean-a
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
