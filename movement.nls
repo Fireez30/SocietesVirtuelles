@@ -180,7 +180,7 @@ to-report vectSeparate
   let vs 0
   find-nearest-neighbor
   ifelse (nearest-neighbor = nobody)
-  [set vs VectFromAngle random 180 0]
+  [set vs (list 0 0)]
   [set vs VectFromAngle (towards nearest-neighbor + 180 ) (1 / distance nearest-neighbor)]
   report vs
 end

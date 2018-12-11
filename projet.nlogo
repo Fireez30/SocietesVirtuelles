@@ -626,7 +626,7 @@ max-angle-turn
 max-angle-turn
 0
 360
-122.0
+64.0
 1
 1
 NIL
@@ -688,7 +688,7 @@ factor-cohere
 factor-cohere
 0
 1
-0.4
+0.5
 0.1
 1
 NIL
@@ -787,10 +787,10 @@ NIL
 1
 
 MONITOR
-1997
-181
-2056
-226
+920
+706
+979
+751
 NIL
 escaped
 17
@@ -806,7 +806,7 @@ fov-angle
 fov-angle
 0
 360
-80.0
+101.0
 1
 1
 NIL
@@ -821,7 +821,7 @@ fov-radius
 fov-radius
 0
 10
-3.0
+4.0
 1
 1
 patches
@@ -956,10 +956,10 @@ PENS
 "Total" 1.0 0 -16777216 true "" "plot count turtles"
 
 MONITOR
-1997
-132
-2054
-177
+920
+657
+977
+702
 agents
 count turtles
 17
@@ -1400,7 +1400,7 @@ SWITCH
 615
 color-using-panic
 color-using-panic
-1
+0
 1
 -1000
 
@@ -1411,7 +1411,7 @@ SWITCH
 655
 color-ocean-o
 color-ocean-o
-0
+1
 1
 -1000
 
@@ -1422,7 +1422,7 @@ SWITCH
 691
 color-ocean-n
 color-ocean-n
-0
+1
 1
 -1000
 
@@ -1433,7 +1433,7 @@ SWITCH
 654
 color-ocean-e
 color-ocean-e
-0
+1
 1
 -1000
 
@@ -1444,7 +1444,7 @@ SWITCH
 690
 color-ocean-a
 color-ocean-a
-0
+1
 1
 -1000
 
