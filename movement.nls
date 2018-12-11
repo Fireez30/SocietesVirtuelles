@@ -201,16 +201,16 @@ end
 to check-coll
   foreach (list speed)
   [ x ->
-    let pas x / 5
-    let liste (list pas pas pas pas pas)
+    let pas x / 3
+    let liste (list pas pas pas)
     foreach liste
     [
       fd pas
       if (pcolor = red or pcolor = brown)[
         rt 120
-        fd pas
         rt random 20
         lt random 20
+        fd pas
       ]
     ]
   ]

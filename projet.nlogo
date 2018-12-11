@@ -1368,7 +1368,7 @@ PLOT
 413
 1191
 646
-Escaped 
+Escaped (using levels of panic)
 time
 number
 0.0
